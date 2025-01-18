@@ -1,18 +1,17 @@
+import { useChartDB } from '@/hooks/use-chartdb';
+import { useFullScreenLoader } from '@/hooks/use-full-screen-spinner';
+import { useReactFlow } from '@xyflow/react';
+import { toJpeg, toPng, toSvg } from 'html-to-image';
 import React, { useCallback, useMemo } from 'react';
 import type { ExportImageContext, ImageType } from './export-image-context';
 import { exportImageContext } from './export-image-context';
-import { toJpeg, toPng, toSvg } from 'html-to-image';
-import { useReactFlow } from '@xyflow/react';
-import { useChartDB } from '@/hooks/use-chartdb';
-import { useFullScreenLoader } from '@/hooks/use-full-screen-spinner';
-import { useTheme } from '@/hooks/use-theme';
 
+const effectiveTheme = 'light';
 export const ExportImageProvider: React.FC<React.PropsWithChildren> = ({
     children,
 }) => {
     const { hideLoader, showLoader } = useFullScreenLoader();
     const { setNodes, getViewport } = useReactFlow();
-    const { effectiveTheme } = useTheme();
     const { diagramName } = useChartDB();
 
     const downloadImage = useCallback(

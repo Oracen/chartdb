@@ -1,19 +1,16 @@
-import React, { useMemo } from 'react';
 import { ToggleGroupItem } from '@/components/toggle/toggle-group';
-import type { DatabaseType } from '@/lib/domain/database-type';
 import { databaseTypeToLabelMap, getDatabaseLogo } from '@/lib/databases';
-import { useTheme } from '@/hooks/use-theme';
+import type { DatabaseType } from '@/lib/domain/database-type';
+import React, { useMemo } from 'react';
 
 export interface DatabaseOptionProps {
     type: DatabaseType;
 }
 
+const effectiveTheme = 'light';
+
 export const DatabaseOption: React.FC<DatabaseOptionProps> = ({ type }) => {
-    const { effectiveTheme } = useTheme();
-    const logo = useMemo(
-        () => getDatabaseLogo(type, effectiveTheme),
-        [type, effectiveTheme]
-    );
+    const logo = useMemo(() => getDatabaseLogo(type, effectiveTheme), [type]);
 
     return (
         <ToggleGroupItem

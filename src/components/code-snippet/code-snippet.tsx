@@ -1,16 +1,15 @@
-import { cn } from '@/lib/utils';
-import React, { lazy, Suspense, useCallback, useEffect } from 'react';
-import { Spinner } from '../spinner/spinner';
-import { useTheme } from '@/hooks/use-theme';
-import { useMonaco } from '@monaco-editor/react';
 import { useToast } from '@/components/toast/use-toast';
-import { Button } from '../button/button';
+import { cn } from '@/lib/utils';
+import { useMonaco } from '@monaco-editor/react';
 import { Copy, CopyCheck } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip/tooltip';
+import React, { lazy, Suspense, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '../button/button';
+import { Spinner } from '../spinner/spinner';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip/tooltip';
+import './config.ts';
 import { DarkTheme } from './themes/dark';
 import { LightTheme } from './themes/light';
-import './config.ts';
 
 export interface CodeSnippetProps {
     className?: string;
@@ -27,6 +26,8 @@ export const Editor = lazy(() =>
     }))
 );
 
+const effectiveTheme = 'light';
+
 export const CodeSnippet: React.FC<CodeSnippetProps> = React.memo(
     ({
         className,
@@ -38,7 +39,6 @@ export const CodeSnippet: React.FC<CodeSnippetProps> = React.memo(
     }) => {
         const { t } = useTranslation();
         const monaco = useMonaco();
-        const { effectiveTheme } = useTheme();
         const { toast } = useToast();
         const [isCopied, setIsCopied] = React.useState(false);
         const [tooltipOpen, setTooltipOpen] = React.useState(false);

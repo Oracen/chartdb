@@ -1,3 +1,49 @@
+import { Badge } from '@/components/badge/badge';
+import { Button } from '@/components/button/button';
+import { useToast } from '@/components/toast/use-toast';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/tooltip/tooltip';
+import { useAlert } from '@/context/alert-context/alert-context';
+import type { ChartDBEvent } from '@/context/chartdb-context/chartdb-context';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useChartDB } from '@/hooks/use-chartdb';
+import { useLayout } from '@/hooks/use-layout';
+import { useLocalConfig } from '@/hooks/use-local-config';
+import { areFieldTypesCompatible } from '@/lib/data/data-types/data-types';
+import { DatabaseType } from '@/lib/domain/database-type';
+import type { DBTable } from '@/lib/domain/db-table';
+import {
+    adjustTablePositions,
+    shouldShowTablesBySchemaFilter,
+} from '@/lib/domain/db-table';
+import type { Graph } from '@/lib/graph';
+import { createGraph, removeVertex } from '@/lib/graph';
+import { cn, debounce, getOperatingSystem } from '@/lib/utils';
+import type {
+    addEdge,
+    NodeDimensionChange,
+    NodePositionChange,
+    NodeRemoveChange,
+    OnEdgesChange,
+    OnNodesChange,
+} from '@xyflow/react';
+import {
+    Background,
+    BackgroundVariant,
+    Controls,
+    MiniMap,
+    ReactFlow,
+    useEdgesState,
+    useKeyPress,
+    useNodesState,
+    useReactFlow,
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import equal from 'fast-deep-equal';
+import { AlertTriangle, LayoutGrid, Magnet, Pencil } from 'lucide-react';
 import React, {
     useCallback,
     useEffect,
@@ -5,77 +51,30 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import type {
-    addEdge,
-    NodePositionChange,
-    NodeRemoveChange,
-    NodeDimensionChange,
-    OnEdgesChange,
-    OnNodesChange,
-} from '@xyflow/react';
-import {
-    ReactFlow,
-    useEdgesState,
-    useNodesState,
-    Background,
-    BackgroundVariant,
-    MiniMap,
-    Controls,
-    useReactFlow,
-    useKeyPress,
-} from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
-import equal from 'fast-deep-equal';
-import type { TableNodeType } from './table-node/table-node';
-import { MIN_TABLE_SIZE, TableNode } from './table-node/table-node';
-import type { RelationshipEdgeType } from './relationship-edge';
-import { RelationshipEdge } from './relationship-edge';
-import { useChartDB } from '@/hooks/use-chartdb';
-import {
-    LEFT_HANDLE_ID_PREFIX,
-    TARGET_ID_PREFIX,
-} from './table-node/table-node-field';
-import { Toolbar } from './toolbar/toolbar';
-import { useToast } from '@/components/toast/use-toast';
-import { Pencil, LayoutGrid, AlertTriangle, Magnet } from 'lucide-react';
-import { Button } from '@/components/button/button';
-import { useLayout } from '@/hooks/use-layout';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { Badge } from '@/components/badge/badge';
-import { useTheme } from '@/hooks/use-theme';
 import { useTranslation } from 'react-i18next';
-import type { DBTable } from '@/lib/domain/db-table';
-import {
-    adjustTablePositions,
-    shouldShowTablesBySchemaFilter,
-} from '@/lib/domain/db-table';
-import { useLocalConfig } from '@/hooks/use-local-config';
-import {
-    Tooltip,
-    TooltipTrigger,
-    TooltipContent,
-} from '@/components/tooltip/tooltip';
-import { MarkerDefinitions } from './marker-definitions';
 import { CanvasContextMenu } from './canvas-context-menu';
-import { areFieldTypesCompatible } from '@/lib/data/data-types/data-types';
 import {
     calcTableHeight,
     findOverlappingTables,
     findTableOverlapping,
 } from './canvas-utils';
-import type { Graph } from '@/lib/graph';
-import { createGraph, removeVertex } from '@/lib/graph';
-import type { ChartDBEvent } from '@/context/chartdb-context/chartdb-context';
-import { cn, debounce, getOperatingSystem } from '@/lib/utils';
 import type { DependencyEdgeType } from './dependency-edge';
 import { DependencyEdge } from './dependency-edge';
+import { MarkerDefinitions } from './marker-definitions';
+import type { RelationshipEdgeType } from './relationship-edge';
+import { RelationshipEdge } from './relationship-edge';
+import type { TableNodeType } from './table-node/table-node';
+import { MIN_TABLE_SIZE, TableNode } from './table-node/table-node';
 import {
     BOTTOM_SOURCE_HANDLE_ID_PREFIX,
     TARGET_DEP_PREFIX,
     TOP_SOURCE_HANDLE_ID_PREFIX,
 } from './table-node/table-node-dependency-indicator';
-import { DatabaseType } from '@/lib/domain/database-type';
-import { useAlert } from '@/context/alert-context/alert-context';
+import {
+    LEFT_HANDLE_ID_PREFIX,
+    TARGET_ID_PREFIX,
+} from './table-node/table-node-field';
+import { Toolbar } from './toolbar/toolbar';
 
 export type EdgeType = RelationshipEdgeType | DependencyEdgeType;
 
@@ -87,6 +86,8 @@ const edgeTypes = {
 };
 
 const initialEdges: EdgeType[] = [];
+
+const effectiveTheme = 'light';
 
 const tableToTableNode = (
     table: DBTable,
@@ -132,7 +133,6 @@ export const Canvas: React.FC<CanvasProps> = ({ initialTables, readonly }) => {
         dependencies,
     } = useChartDB();
     const { showSidePanel } = useLayout();
-    const { effectiveTheme } = useTheme();
     const { scrollAction, showDependenciesOnCanvas, showMiniMapOnCanvas } =
         useLocalConfig();
     const { showAlert } = useAlert();

@@ -1,13 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
-import ChartDBLogo from '@/assets/logo-light.png';
 import ChartDBDarkLogo from '@/assets/logo-dark.png';
-import { useTheme } from '@/hooks/use-theme';
-import { LocalConfigProvider } from '@/context/local-config-context/local-config-provider';
-import { ThemeProvider } from '@/context/theme-context/theme-provider';
-import { Button } from '@/components/button/button';
-import { CloudDownload } from 'lucide-react';
-import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
-import type { Template } from '../../templates-data/templates-data';
+import ChartDBLogo from '@/assets/logo-light.png';
+import { Badge } from '@/components/badge/badge';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -15,28 +8,36 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from '@/components/breadcrumb/breadcrumb';
-import { Spinner } from '@/components/spinner/spinner';
+import { Button } from '@/components/button/button';
+import { Link } from '@/components/link/link';
 import { Separator } from '@/components/separator/separator';
-import {
-    databaseSecondaryLogoMap,
-    databaseTypeToLabelMap,
-} from '@/lib/databases';
+import { Spinner } from '@/components/spinner/spinner';
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { Badge } from '@/components/badge/badge';
-import { Canvas } from '../editor-page/canvas/canvas';
-import { ReactFlowProvider } from '@xyflow/react';
 import { ChartDBProvider } from '@/context/chartdb-context/chartdb-provider';
-import { Helmet } from 'react-helmet-async';
+import { LocalConfigProvider } from '@/context/local-config-context/local-config-provider';
+import { ThemeProvider } from '@/context/theme-context/theme-provider';
+import {
+    databaseSecondaryLogoMap,
+    databaseTypeToLabelMap,
+} from '@/lib/databases';
 import { APP_URL, HOST_URL } from '@/lib/env';
-import { Link } from '@/components/link/link';
+import { ReactFlowProvider } from '@xyflow/react';
+import { CloudDownload } from 'lucide-react';
+import React, { useCallback, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import type { Template } from '../../templates-data/templates-data';
+import { Canvas } from '../editor-page/canvas/canvas';
 
 export interface TemplatePageLoaderData {
     template: Template | undefined;
 }
+
+const effectiveTheme = 'light';
 
 const TemplatePageComponent: React.FC = () => {
     const { templateSlug } = useParams<{ templateSlug: string }>();
@@ -50,8 +51,6 @@ const TemplatePageComponent: React.FC = () => {
             navigate('/templates');
         }
     }, [template, navigate]);
-
-    const { effectiveTheme } = useTheme();
 
     const cloneTemplate = useCallback(async () => {
         if (APP_URL) {

@@ -1,24 +1,24 @@
-import React from 'react';
-import { randomColor } from '@/lib/colors';
-import {
-    databaseSecondaryLogoMap,
-    databaseTypeToLabelMap,
-} from '@/lib/databases';
+import { Badge } from '@/components/badge/badge';
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useTheme } from '@/hooks/use-theme';
+import { randomColor } from '@/lib/colors';
+import {
+    databaseSecondaryLogoMap,
+    databaseTypeToLabelMap,
+} from '@/lib/databases';
+import React from 'react';
 import type { Template } from '../../../templates-data/templates-data';
-import { Badge } from '@/components/badge/badge';
 
 export interface TemplateCardProps {
     template: Template;
 }
 
+const effectiveTheme: string = 'light';
+
 export const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
-    const { effectiveTheme } = useTheme();
     return (
         <a href={`/templates/${template.slug}`}>
             <div className="flex h-80 w-full cursor-pointer flex-col rounded-lg border-2 border-slate-500 bg-slate-50 shadow-sm transition duration-300 ease-in-out hover:scale-[102%] hover:border-pink-600 dark:border-slate-700 dark:bg-slate-950">

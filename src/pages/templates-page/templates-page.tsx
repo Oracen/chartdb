@@ -1,15 +1,14 @@
-import React from 'react';
-import ChartDBLogo from '@/assets/logo-light.png';
 import ChartDBDarkLogo from '@/assets/logo-dark.png';
-import { useTheme } from '@/hooks/use-theme';
+import ChartDBLogo from '@/assets/logo-light.png';
+import { ListMenu } from '@/components/list-menu/list-menu';
+import { Spinner } from '@/components/spinner/spinner';
 import { LocalConfigProvider } from '@/context/local-config-context/local-config-provider';
 import { ThemeProvider } from '@/context/theme-context/theme-provider';
-import { Component, Star } from 'lucide-react';
-import { ListMenu } from '@/components/list-menu/list-menu';
-import { TemplateCard } from './template-card/template-card';
-import { useLoaderData, useMatches, useParams } from 'react-router-dom';
 import type { Template } from '@/templates-data/templates-data';
-import { Spinner } from '@/components/spinner/spinner';
+import { Component, Star } from 'lucide-react';
+import React from 'react';
+import { useLoaderData, useMatches, useParams } from 'react-router-dom';
+import { TemplateCard } from './template-card/template-card';
 import { TemplatesPageHelmet } from './templates-page-helmet';
 
 export interface TemplatesPageLoaderData {
@@ -17,8 +16,9 @@ export interface TemplatesPageLoaderData {
     allTags: string[] | undefined;
 }
 
+const effectiveTheme = 'light';
+
 const TemplatesPageComponent: React.FC = () => {
-    const { effectiveTheme } = useTheme();
     const data = useLoaderData() as TemplatesPageLoaderData;
 
     const { templates, allTags } = data ?? {};

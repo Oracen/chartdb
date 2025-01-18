@@ -1,17 +1,16 @@
-import React from 'react';
-import ChartDBLogo from '@/assets/logo-light.png';
 import ChartDBDarkLogo from '@/assets/logo-dark.png';
-import { examples } from './examples-data/examples-data';
-import { ExampleCard } from './example-card';
-import { useTheme } from '@/hooks/use-theme';
+import ChartDBLogo from '@/assets/logo-light.png';
 import { LocalConfigProvider } from '@/context/local-config-context/local-config-provider';
 import { StorageProvider } from '@/context/storage-context/storage-provider';
 import { ThemeProvider } from '@/context/theme-context/theme-provider';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { ExampleCard } from './example-card';
+import { examples } from './examples-data/examples-data';
+
+const effectiveTheme = 'light';
 
 const ExamplesPageComponent: React.FC = () => {
-    const { effectiveTheme } = useTheme();
-
     return (
         <>
             <Helmet>

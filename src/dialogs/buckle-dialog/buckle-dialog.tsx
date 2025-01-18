@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
-import { useDialog } from '@/hooks/use-dialog';
+import { Button } from '@/components/button/button';
 import {
     Dialog,
     DialogClose,
@@ -9,16 +8,17 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/dialog/dialog';
-import { Button } from '@/components/button/button';
-import type { BaseDialogProps } from '../common/base-dialog-props';
+import { useDialog } from '@/hooks/use-dialog';
 import { useLocalConfig } from '@/hooks/use-local-config';
-import { useTheme } from '@/hooks/use-theme';
+import React, { useCallback, useEffect } from 'react';
+import type { BaseDialogProps } from '../common/base-dialog-props';
 
 export interface BuckleDialogProps extends BaseDialogProps {}
 
+const effectiveTheme = 'light';
+
 export const BuckleDialog: React.FC<BuckleDialogProps> = ({ dialog }) => {
     const { setBuckleWaitlistOpened } = useLocalConfig();
-    const { effectiveTheme } = useTheme();
 
     useEffect(() => {
         if (!dialog.open) return;

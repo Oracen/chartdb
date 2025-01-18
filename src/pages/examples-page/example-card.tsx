@@ -1,30 +1,30 @@
-import React, { useCallback } from 'react';
-import type { Example } from './examples-data/examples-data';
-import { randomColor } from '@/lib/colors';
-import { Import } from 'lucide-react';
-import { Label } from '@/components/label/label';
 import { Button } from '@/components/button/button';
-import {
-    databaseSecondaryLogoMap,
-    databaseTypeToLabelMap,
-} from '@/lib/databases';
+import { Label } from '@/components/label/label';
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
 import { useStorage } from '@/hooks/use-storage';
+import { randomColor } from '@/lib/colors';
+import {
+    databaseSecondaryLogoMap,
+    databaseTypeToLabelMap,
+} from '@/lib/databases';
 import type { Diagram } from '@/lib/domain/diagram';
+import { Import } from 'lucide-react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '@/hooks/use-theme';
+import type { Example } from './examples-data/examples-data';
 
 export interface ExampleCardProps {
     example: Example;
 }
 
+const effectiveTheme: string = 'light';
+
 export const ExampleCard: React.FC<ExampleCardProps> = ({ example }) => {
     const navigate = useNavigate();
-    const { effectiveTheme } = useTheme();
     const { addDiagram, deleteDiagram } = useStorage();
     const { diagram } = example;
     const utilizeExample = useCallback(async () => {

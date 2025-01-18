@@ -5,38 +5,39 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import { TopNavbar } from './top-navbar/top-navbar';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useConfig } from '@/hooks/use-config';
-import { useChartDB } from '@/hooks/use-chartdb';
-import { useDialog } from '@/hooks/use-dialog';
-import { useRedoUndoStack } from '@/hooks/use-redo-undo-stack';
-import { Toaster } from '@/components/toast/toaster';
-import { useFullScreenLoader } from '@/hooks/use-full-screen-spinner';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { useLayout } from '@/hooks/use-layout';
-import { useToast } from '@/components/toast/use-toast';
-import type { Diagram } from '@/lib/domain/diagram';
+
+import { Spinner } from '@/components/spinner/spinner';
 import { ToastAction } from '@/components/toast/toast';
-import { useLocalConfig } from '@/hooks/use-local-config';
-import { useTranslation } from 'react-i18next';
+import { Toaster } from '@/components/toast/toaster';
+import { useToast } from '@/components/toast/use-toast';
+import { AlertProvider } from '@/context/alert-context/alert-provider';
+import { ChartDBProvider } from '@/context/chartdb-context/chartdb-provider';
+import { ConfigProvider } from '@/context/config-context/config-provider';
+import { DialogProvider } from '@/context/dialog-context/dialog-provider';
+import { ExportImageProvider } from '@/context/export-image-context/export-image-provider';
 import { FullScreenLoaderProvider } from '@/context/full-screen-spinner-context/full-screen-spinner-provider';
+import { HistoryProvider } from '@/context/history-context/history-provider';
+import { RedoUndoStackProvider } from '@/context/history-context/redo-undo-stack-provider';
+import { KeyboardShortcutsProvider } from '@/context/keyboard-shortcuts-context/keyboard-shortcuts-provider';
 import { LayoutProvider } from '@/context/layout-context/layout-provider';
 import { LocalConfigProvider } from '@/context/local-config-context/local-config-provider';
 import { StorageProvider } from '@/context/storage-context/storage-provider';
-import { ConfigProvider } from '@/context/config-context/config-provider';
-import { RedoUndoStackProvider } from '@/context/history-context/redo-undo-stack-provider';
-import { ChartDBProvider } from '@/context/chartdb-context/chartdb-provider';
-import { HistoryProvider } from '@/context/history-context/history-provider';
 import { ThemeProvider } from '@/context/theme-context/theme-provider';
-import { ReactFlowProvider } from '@xyflow/react';
-import { ExportImageProvider } from '@/context/export-image-context/export-image-provider';
-import { DialogProvider } from '@/context/dialog-context/dialog-provider';
-import { KeyboardShortcutsProvider } from '@/context/keyboard-shortcuts-context/keyboard-shortcuts-provider';
-import { Spinner } from '@/components/spinner/spinner';
-import { Helmet } from 'react-helmet-async';
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useChartDB } from '@/hooks/use-chartdb';
+import { useConfig } from '@/hooks/use-config';
+import { useDialog } from '@/hooks/use-dialog';
+import { useFullScreenLoader } from '@/hooks/use-full-screen-spinner';
+import { useLayout } from '@/hooks/use-layout';
+import { useLocalConfig } from '@/hooks/use-local-config';
+import { useRedoUndoStack } from '@/hooks/use-redo-undo-stack';
 import { useStorage } from '@/hooks/use-storage';
-import { AlertProvider } from '@/context/alert-context/alert-provider';
+import type { Diagram } from '@/lib/domain/diagram';
+import { ReactFlowProvider } from '@xyflow/react';
+import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
+import EditorDesktopLayoutLazy from './editor-desktop-layout';
 
 const OPEN_STAR_US_AFTER_SECONDS = 30;
 const SHOW_STAR_US_AGAIN_AFTER_DAYS = 1;
@@ -44,14 +45,6 @@ const SHOW_STAR_US_AGAIN_AFTER_DAYS = 1;
 const OPEN_BUCKLE_AFTER_SECONDS = 60;
 const SHOW_BUCKLE_AGAIN_AFTER_DAYS = 1;
 const SHOW_BUCKLE_AGAIN_OPENED_AFTER_DAYS = 7;
-
-export const EditorDesktopLayoutLazy = React.lazy(
-    () => import('./editor-desktop-layout')
-);
-
-export const EditorMobileLayoutLazy = React.lazy(
-    () => import('./editor-mobile-layout')
-);
 
 const EditorPageComponent: React.FC = () => {
     const {
@@ -280,7 +273,6 @@ const EditorPageComponent: React.FC = () => {
             <section
                 className={`bg-background ${isDesktop ? 'h-screen w-screen' : 'h-dvh w-dvw'} flex select-none flex-col overflow-x-hidden`}
             >
-                <TopNavbar />
                 <Suspense
                     fallback={
                         <div className="flex flex-1 items-center justify-center">
@@ -288,15 +280,7 @@ const EditorPageComponent: React.FC = () => {
                         </div>
                     }
                 >
-                    {isDesktop ? (
-                        <EditorDesktopLayoutLazy
-                            initialDiagram={initialDiagram}
-                        />
-                    ) : (
-                        <EditorMobileLayoutLazy
-                            initialDiagram={initialDiagram}
-                        />
-                    )}
+                    <EditorDesktopLayoutLazy initialDiagram={initialDiagram} />
                 </Suspense>
             </section>
             <Toaster />
