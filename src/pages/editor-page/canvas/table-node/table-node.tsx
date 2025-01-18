@@ -1,27 +1,26 @@
-import React, { useCallback, useState, useMemo } from 'react';
-import type { NodeProps, Node } from '@xyflow/react';
-import { NodeResizer, useStore } from '@xyflow/react';
 import { Button } from '@/components/button/button';
+import { Label } from '@/components/label/label';
+import { useChartDB } from '@/hooks/use-chartdb';
+import { useLayout } from '@/hooks/use-layout';
+import type { DBField } from '@/lib/domain/db-field';
+import type { DBTable } from '@/lib/domain/db-table';
+import { cn } from '@/lib/utils';
+import type { Node, NodeProps } from '@xyflow/react';
+import { NodeResizer, useStore } from '@xyflow/react';
 import {
+    ChevronDown,
     ChevronsLeftRight,
     ChevronsRightLeft,
-    Pencil,
-    Table2,
-    ChevronDown,
     ChevronUp,
+    Table2,
 } from 'lucide-react';
-import { Label } from '@/components/label/label';
-import type { DBTable } from '@/lib/domain/db-table';
-import { TableNodeField } from './table-node-field';
-import { useLayout } from '@/hooks/use-layout';
-import { useChartDB } from '@/hooks/use-chartdb';
-import type { RelationshipEdgeType } from '../relationship-edge';
-import type { DBField } from '@/lib/domain/db-field';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TableNodeContextMenu } from './table-node-context-menu';
-import { cn } from '@/lib/utils';
-import { TableNodeDependencyIndicator } from './table-node-dependency-indicator';
 import type { EdgeType } from '../canvas';
+import type { RelationshipEdgeType } from '../relationship-edge';
+import { TableNodeContextMenu } from './table-node-context-menu';
+import { TableNodeDependencyIndicator } from './table-node-dependency-indicator';
+import { TableNodeField } from './table-node-field';
 
 export type TableNodeType = Node<
     {
@@ -44,7 +43,7 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
         id,
         data: { table, isOverlapping, highlightOverlappingTables },
     }) => {
-        const { updateTable, relationships, readonly } = useChartDB();
+        const { updateTable, relationships } = useChartDB();
         const edges = useStore((store) => store.edges) as EdgeType[];
         const { openTableFromSidebar, selectSidebarSection } = useLayout();
         const [expanded, setExpanded] = useState(false);
@@ -173,15 +172,6 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
                             </Label>
                         </div>
                         <div className="hidden shrink-0 flex-row group-hover:flex">
-                            {readonly ? null : (
-                                <Button
-                                    variant="ghost"
-                                    className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
-                                    onClick={openTableInEditor}
-                                >
-                                    <Pencil className="size-4" />
-                                </Button>
-                            )}
                             <Button
                                 variant="ghost"
                                 className="size-6 p-0 text-slate-500 hover:bg-primary-foreground hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"

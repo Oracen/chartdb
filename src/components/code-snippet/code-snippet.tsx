@@ -26,7 +26,7 @@ export const Editor = lazy(() =>
     }))
 );
 
-const effectiveTheme = 'light';
+const effectiveTheme: string = 'light';
 
 export const CodeSnippet: React.FC<CodeSnippetProps> = React.memo(
     ({

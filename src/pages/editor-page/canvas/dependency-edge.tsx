@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import { useChartDB } from '@/hooks/use-chartdb';
+import { useLayout } from '@/hooks/use-layout';
+import type { DBDependency } from '@/lib/domain/db-dependency';
+import { cn } from '@/lib/utils';
 import type { Edge, EdgeProps } from '@xyflow/react';
 import { getSmoothStepPath, Position, useReactFlow } from '@xyflow/react';
-import { useChartDB } from '@/hooks/use-chartdb';
-import { cn } from '@/lib/utils';
-import type { DBDependency } from '@/lib/domain/db-dependency';
-import { useLayout } from '@/hooks/use-layout';
+import React, { useCallback, useMemo } from 'react';
 
 export type DependencyEdgeType = Edge<
     {
@@ -157,12 +157,5 @@ export const DependencyEdge: React.FC<EdgeProps<DependencyEdgeType>> = ({
                 }}
             />
         </>
-        // <BaseEdge
-        //     id={id}
-        //     path={edgePath}
-        //     markerStart="url(#cardinality_one)"
-        //     markerEnd="url(#cardinality_one)"
-        //     className={`!stroke-2 ${selected ? '!stroke-slate-500' : '!stroke-slate-300'}`}
-        // />
     );
 };

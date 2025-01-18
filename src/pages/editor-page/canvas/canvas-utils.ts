@@ -1,7 +1,7 @@
 import type { Cardinality } from '@/lib/domain/db-relationship';
-import { MIN_TABLE_SIZE, type TableNodeType } from './table-node/table-node';
-import { addEdge, createGraph, removeEdge, type Graph } from '@/lib/graph';
 import type { DBTable } from '@/lib/domain/db-table';
+import { addEdge, createGraph, removeEdge, type Graph } from '@/lib/graph';
+import { MIN_TABLE_SIZE, type TableNodeType } from './table-node/table-node';
 
 export const getCardinalityMarkerId = ({
     cardinality,
@@ -112,13 +112,4 @@ export const calcTableHeight = (fieldCount: number): number => {
     const fieldHeight = 32; // h-8 per field
 
     return Math.min(fieldCount, 11) * fieldHeight + 48;
-};
-
-export const getTableDimensions = (
-    table: DBTable
-): { width: number; height: number } => {
-    const fieldCount = table.fields.length;
-    const height = calcTableHeight(fieldCount);
-    const width = table.width || MIN_TABLE_SIZE;
-    return { width, height };
 };

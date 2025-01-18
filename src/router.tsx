@@ -30,6 +30,17 @@ const routes: RouteObject[] = [
         },
     },
     {
+        path: 'a-test-page',
+        async lazy() {
+            const { TestPageHome } = await import(
+                './pages/a-test-page/test-page'
+            );
+            return {
+                element: <TestPageHome />,
+            };
+        },
+    },
+    {
         id: 'templates',
         path: 'templates',
         async lazy() {
@@ -113,39 +124,6 @@ const routes: RouteObject[] = [
                 template: templates.find(
                     (template) => template.slug === params.templateSlug
                 ),
-            };
-        },
-    },
-    {
-        id: 'templates_load',
-        path: 'templates/clone/:templateSlug',
-        async lazy() {
-            const { CloneTemplatePage } = await import(
-                './pages/clone-template-page/clone-template-page'
-            );
-            return {
-                element: <CloneTemplatePage />,
-            };
-        },
-        loader: async ({ params }) => {
-            const { templates } = await import(
-                './templates-data/templates-data'
-            );
-            return {
-                template: templates.find(
-                    (template) => template.slug === params.templateSlug
-                ),
-            };
-        },
-    },
-    {
-        path: '*',
-        async lazy() {
-            const { NotFoundPage } = await import(
-                './pages/not-found-page/not-found-page'
-            );
-            return {
-                element: <NotFoundPage />,
             };
         },
     },

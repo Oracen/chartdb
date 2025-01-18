@@ -1,25 +1,18 @@
-import React from 'react';
-import { Plus, FileType2, FileKey2, MessageCircleMore } from 'lucide-react';
-import { Button } from '@/components/button/button';
 import {
     Accordion,
+    AccordionContent,
     AccordionItem,
     AccordionTrigger,
-    AccordionContent,
 } from '@/components/accordion/accordion';
-import { Separator } from '@/components/separator/separator';
-import type { DBTable } from '@/lib/domain/db-table';
-import type { DBField } from '@/lib/domain/db-field';
-import { useChartDB } from '@/hooks/use-chartdb';
-import { TableField } from './table-field/table-field';
-import { TableIndex } from './table-index/table-index';
-import type { DBIndex } from '@/lib/domain/db-index';
-import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/button/button';
 import { Textarea } from '@/components/textarea/textarea';
+import { useChartDB } from '@/hooks/use-chartdb';
+import type { DBField } from '@/lib/domain/db-field';
+import type { DBTable } from '@/lib/domain/db-table';
 import type { DragEndEvent } from '@dnd-kit/core';
 import {
-    DndContext,
     closestCenter,
+    DndContext,
     PointerSensor,
     useSensor,
     useSensors,
@@ -29,7 +22,10 @@ import {
     SortableContext,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { ColorPicker } from './color-picker/color-picker';
+import { FileType2, MessageCircleMore, Plus } from 'lucide-react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { TableField } from './table-field/table-field';
 
 type AccordionItemValue = 'fields' | 'indexes';
 
@@ -40,15 +36,7 @@ export interface TableListItemContentProps {
 export const TableListItemContent: React.FC<TableListItemContentProps> = ({
     table,
 }) => {
-    const {
-        updateField,
-        removeField,
-        createField,
-        createIndex,
-        removeIndex,
-        updateIndex,
-        updateTable,
-    } = useChartDB();
+    const { updateField, removeField, createField, updateTable } = useChartDB();
     const { t } = useTranslation();
     const { color } = table;
     const [selectedItems, setSelectedItems] = React.useState<
@@ -68,18 +56,6 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                 fields: arrayMove(items, oldIndex, newIndex),
             });
         }
-    };
-
-    const createIndexHandler = () => {
-        setSelectedItems((prev) => {
-            if (prev.includes('indexes')) {
-                return prev;
-            }
-
-            return [...prev, 'indexes'];
-        });
-
-        createIndex(table.id);
     };
 
     return (
@@ -106,7 +82,7 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                         <div className="flex flex-1 items-center justify-between">
                             <div className="flex flex-row items-center gap-1">
                                 <FileType2 className="size-4" />
-                                {t('side_panel.tables_section.table.fields')}
+                                Fields
                             </div>
                             <div className="flex flex-row-reverse">
                                 <div className="hidden flex-row-reverse group-hover:flex">
@@ -157,50 +133,6 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                     </AccordionContent>
                 </AccordionItem>
 
-                <AccordionItem value="indexes" className="mb-2 border-y-0">
-                    <AccordionTrigger
-                        iconPosition="right"
-                        className="group flex flex-1 p-0 px-2 py-1 text-xs text-subtitle hover:bg-secondary"
-                        asChild
-                    >
-                        <div className="flex flex-1 items-center justify-between">
-                            <div className="flex flex-row items-center gap-1">
-                                <FileKey2 className="size-4" />
-                                {t('side_panel.tables_section.table.indexes')}
-                            </div>
-                            <div className="flex flex-row-reverse">
-                                <div className="hidden flex-row-reverse group-hover:flex">
-                                    <Button
-                                        variant="ghost"
-                                        className="size-4 p-0 text-xs hover:bg-primary-foreground"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            createIndexHandler();
-                                        }}
-                                    >
-                                        <Plus className="size-4 shrink-0 text-muted-foreground transition-transform duration-200" />
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-0 pt-1">
-                        {table.indexes.map((index) => (
-                            <TableIndex
-                                key={index.id}
-                                index={index}
-                                removeIndex={() =>
-                                    removeIndex(table.id, index.id)
-                                }
-                                updateIndex={(attrs: Partial<DBIndex>) =>
-                                    updateIndex(table.id, index.id, attrs)
-                                }
-                                fields={table.fields}
-                            />
-                        ))}
-                    </AccordionContent>
-                </AccordionItem>
-
                 <AccordionItem value="comments" className="border-y-0">
                     <AccordionTrigger
                         iconPosition="right"
@@ -230,31 +162,6 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>
-            <Separator className="" />
-            <div className="flex flex-1 items-center justify-between">
-                <ColorPicker
-                    color={color}
-                    onChange={(color) => updateTable(table.id, { color })}
-                />
-                <div className="flex gap-1">
-                    <Button
-                        variant="outline"
-                        className="h-8 p-2 text-xs"
-                        onClick={createIndexHandler}
-                    >
-                        <FileKey2 className="h-4" />
-                        {t('side_panel.tables_section.table.add_index')}
-                    </Button>
-                    <Button
-                        variant="outline"
-                        className="h-8 p-2 text-xs"
-                        onClick={() => createField(table.id)}
-                    >
-                        <FileType2 className="h-4" />
-                        {t('side_panel.tables_section.table.add_field')}
-                    </Button>
-                </div>
-            </div>
         </div>
     );
 };

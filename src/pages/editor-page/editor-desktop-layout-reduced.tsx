@@ -7,7 +7,8 @@ import { useLayout } from '@/hooks/use-layout';
 import type { Diagram } from '@/lib/domain/diagram';
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { Canvas } from './canvas/canvas';
+
+import { CanvasReduced } from './canvas/canvas-reduced';
 import { SidePanel } from './side-panel/side-panel';
 
 export interface EditorDesktopLayoutProps {
@@ -31,7 +32,11 @@ export const EditorDesktopLayout: React.FC<EditorDesktopLayoutProps> = ({
             </ResizablePanel>
             <ResizableHandle disabled={!isSidePanelShowed} />
             <ResizablePanel defaultSize={75}>
-                <Canvas initialTables={initialDiagram?.tables ?? []} />
+                <CanvasReduced
+                    initialTables={initialDiagram?.tables || []}
+                    initialRelationships={initialDiagram?.relationships || []}
+                    initialDependencies={initialDiagram?.dependencies || []}
+                />
             </ResizablePanel>
         </ResizablePanelGroup>
     );

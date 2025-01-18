@@ -1,12 +1,5 @@
 import { z } from 'zod';
 import { DatabaseType } from '../../domain/database-type';
-import { clickhouseDataTypes } from './clickhouse-data-types';
-import { genericDataTypes } from './generic-data-types';
-import { mariadbDataTypes } from './mariadb-data-types';
-import { mysqlDataTypes } from './mysql-data-types';
-import { postgresDataTypes } from './postgres-data-types';
-import { sqlServerDataTypes } from './sql-server-data-types';
-import { sqliteDataTypes } from './sqlite-data-types';
 
 export interface DataType {
     id: string;
@@ -17,17 +10,6 @@ export const dataTypeSchema: z.ZodType<DataType> = z.object({
     id: z.string(),
     name: z.string(),
 });
-
-export const dataTypeMap: Record<DatabaseType, readonly DataType[]> = {
-    [DatabaseType.GENERIC]: genericDataTypes,
-    [DatabaseType.POSTGRESQL]: postgresDataTypes,
-    [DatabaseType.MYSQL]: mysqlDataTypes,
-    [DatabaseType.SQL_SERVER]: sqlServerDataTypes,
-    [DatabaseType.MARIADB]: mariadbDataTypes,
-    [DatabaseType.SQLITE]: sqliteDataTypes,
-    [DatabaseType.CLICKHOUSE]: clickhouseDataTypes,
-    [DatabaseType.COCKROACHDB]: postgresDataTypes,
-} as const;
 
 const compatibleTypes: Record<DatabaseType, Record<string, string[]>> = {
     [DatabaseType.POSTGRESQL]: {

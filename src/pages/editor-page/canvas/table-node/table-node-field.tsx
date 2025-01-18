@@ -1,20 +1,19 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/tooltip/tooltip';
+import { useChartDB } from '@/hooks/use-chartdb';
+import type { DBField } from '@/lib/domain/db-field';
+import { cn } from '@/lib/utils';
 import {
     Handle,
     Position,
     useConnection,
     useUpdateNodeInternals,
 } from '@xyflow/react';
-import { Button } from '@/components/button/button';
-import { KeyRound, MessageCircleMore, Trash2 } from 'lucide-react';
-import type { DBField } from '@/lib/domain/db-field';
-import { useChartDB } from '@/hooks/use-chartdb';
-import { cn } from '@/lib/utils';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from '@/components/tooltip/tooltip';
+import { KeyRound, MessageCircleMore } from 'lucide-react';
+import React, { useEffect, useMemo, useRef } from 'react';
 
 export const LEFT_HANDLE_ID_PREFIX = 'left_rel_';
 export const RIGHT_HANDLE_ID_PREFIX = 'right_rel_';
@@ -31,7 +30,7 @@ export interface TableNodeFieldProps {
 
 export const TableNodeField: React.FC<TableNodeFieldProps> = React.memo(
     ({ field, focused, tableNodeId, highlighted, visible, isConnectable }) => {
-        const { removeField, relationships, readonly } = useChartDB();
+        const { relationships, readonly } = useChartDB();
         const updateNodeInternals = useUpdateNodeInternals();
         const connection = useConnection();
         const isTarget = useMemo(
@@ -158,20 +157,6 @@ export const TableNodeField: React.FC<TableNodeFieldProps> = React.memo(
                         {field.type.name}
                         {field.nullable ? '?' : ''}
                     </div>
-                    {readonly ? null : (
-                        <div className="hidden flex-row group-hover:flex">
-                            <Button
-                                variant="ghost"
-                                className="size-6 p-0 hover:bg-primary-foreground"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeField(tableNodeId, field.id);
-                                }}
-                            >
-                                <Trash2 className="size-3.5 text-red-700" />
-                            </Button>
-                        </div>
-                    )}
                 </div>
             </div>
         );

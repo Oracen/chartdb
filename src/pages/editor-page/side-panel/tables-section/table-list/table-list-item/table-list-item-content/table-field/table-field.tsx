@@ -1,30 +1,25 @@
-import React from 'react';
-import { Ellipsis, GripVertical, Trash2, KeyRound } from 'lucide-react';
-import { Input } from '@/components/input/input';
 import { Button } from '@/components/button/button';
 import { Separator } from '@/components/separator/separator';
+import { Ellipsis, KeyRound } from 'lucide-react';
+import React from 'react';
 
-import type { DBField } from '@/lib/domain/db-field';
-import { useChartDB } from '@/hooks/use-chartdb';
-import { dataTypeMap } from '@/lib/data/data-types/data-types';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from '@/components/tooltip/tooltip';
+import { Checkbox } from '@/components/checkbox/checkbox';
+import { Label } from '@/components/label/label';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from '@/components/popover/popover';
-import { Label } from '@/components/label/label';
-import { Checkbox } from '@/components/checkbox/checkbox';
-import { useTranslation } from 'react-i18next';
 import { Textarea } from '@/components/textarea/textarea';
-import { TableFieldToggle } from './table-field-toggle';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/tooltip/tooltip';
+import type { DBField } from '@/lib/domain/db-field';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { SelectBox } from '@/components/select-box/select-box';
+import { TableFieldToggle } from './table-field-toggle';
 
 export interface TableFieldProps {
     field: DBField;
@@ -35,17 +30,10 @@ export interface TableFieldProps {
 export const TableField: React.FC<TableFieldProps> = ({
     field,
     updateField,
-    removeField,
 }) => {
-    const { databaseType } = useChartDB();
-    const { t } = useTranslation();
-    const { attributes, listeners, setNodeRef, transform, transition } =
-        useSortable({ id: field.id });
-
-    const dataFieldOptions = dataTypeMap[databaseType].map((type) => ({
-        label: type.name,
-        value: type.id,
-    }));
+    const { attributes, setNodeRef, transform, transition } = useSortable({
+        id: field.id,
+    });
 
     const style = {
         transform: CSS.Translate.toString(transform),
@@ -60,57 +48,9 @@ export const TableField: React.FC<TableFieldProps> = ({
             {...attributes}
         >
             <div className="flex w-8/12 items-center justify-start gap-1 overflow-hidden">
-                <div
-                    className="flex w-4 shrink-0 cursor-move items-center justify-center"
-                    {...listeners}
-                >
-                    <GripVertical className="size-3.5  text-muted-foreground" />
-                </div>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <span className="w-5/12">
-                            <Input
-                                className="h-8 w-full !truncate focus-visible:ring-0"
-                                type="text"
-                                placeholder={t(
-                                    'side_panel.tables_section.table.field_name'
-                                )}
-                                value={field.name}
-                                onChange={(e) =>
-                                    updateField({
-                                        name: e.target.value,
-                                    })
-                                }
-                            />
-                        </span>
-                    </TooltipTrigger>
-                    <TooltipContent>{field.name}</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                    <TooltipTrigger className="flex h-8 !w-5/12" asChild>
-                        <span>
-                            <SelectBox
-                                className="flex h-8 min-h-8 w-full"
-                                options={dataFieldOptions}
-                                placeholder={t(
-                                    'side_panel.tables_section.table.field_type'
-                                )}
-                                value={field.type.id}
-                                onChange={(value) =>
-                                    updateField({
-                                        type: dataTypeMap[databaseType].find(
-                                            (v) => v.id === value
-                                        ),
-                                    })
-                                }
-                                emptyPlaceholder={t(
-                                    'side_panel.tables_section.table.no_types_found'
-                                )}
-                            />
-                        </span>
-                    </TooltipTrigger>
-                    <TooltipContent>{field.type.name}</TooltipContent>
-                </Tooltip>
+                <span>
+                    {field.name} ({field.type.id})
+                </span>
             </div>
             <div className="flex w-4/12 justify-end gap-1 overflow-hidden">
                 <Tooltip>
@@ -128,9 +68,7 @@ export const TableField: React.FC<TableFieldProps> = ({
                             </TableFieldToggle>
                         </span>
                     </TooltipTrigger>
-                    <TooltipContent>
-                        {t('side_panel.tables_section.table.nullable')}
-                    </TooltipContent>
+                    <TooltipContent>Nullable</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                     <TooltipTrigger asChild>
@@ -148,9 +86,7 @@ export const TableField: React.FC<TableFieldProps> = ({
                             </TableFieldToggle>
                         </span>
                     </TooltipTrigger>
-                    <TooltipContent>
-                        {t('side_panel.tables_section.table.primary_key')}
-                    </TooltipContent>
+                    <TooltipContent>Primary Key</TooltipContent>
                 </Tooltip>
                 <Popover>
                     <PopoverTrigger asChild>
@@ -163,21 +99,13 @@ export const TableField: React.FC<TableFieldProps> = ({
                     </PopoverTrigger>
                     <PopoverContent className="w-52">
                         <div className="flex flex-col gap-2">
-                            <div className="text-sm font-semibold">
-                                {t(
-                                    'side_panel.tables_section.table.field_actions.title'
-                                )}
-                            </div>
-                            <Separator orientation="horizontal" />
                             <div className="flex flex-col gap-3">
                                 <div className="flex items-center justify-between">
                                     <Label
                                         htmlFor="width"
                                         className="text-subtitle"
                                     >
-                                        {t(
-                                            'side_panel.tables_section.table.field_actions.unique'
-                                        )}
+                                        Unique
                                     </Label>
                                     <Checkbox
                                         checked={field.unique}
@@ -194,9 +122,7 @@ export const TableField: React.FC<TableFieldProps> = ({
                                         htmlFor="width"
                                         className="text-subtitle"
                                     >
-                                        {t(
-                                            'side_panel.tables_section.table.field_actions.comments'
-                                        )}
+                                        Comments
                                     </Label>
                                     <Textarea
                                         value={field.comments}
@@ -205,24 +131,12 @@ export const TableField: React.FC<TableFieldProps> = ({
                                                 comments: e.target.value,
                                             })
                                         }
-                                        placeholder={t(
-                                            'side_panel.tables_section.table.field_actions.no_comments'
-                                        )}
+                                        placeholder="No comments"
                                         className="w-full rounded-md bg-muted text-sm"
                                     />
                                 </div>
                             </div>
                             <Separator orientation="horizontal" />
-                            <Button
-                                variant="outline"
-                                className="flex gap-2 !text-red-700"
-                                onClick={removeField}
-                            >
-                                <Trash2 className="size-3.5 text-red-700" />
-                                {t(
-                                    'side_panel.tables_section.table.field_actions.delete_field'
-                                )}
-                            </Button>
                         </div>
                     </PopoverContent>
                 </Popover>

@@ -38,9 +38,6 @@ export const addEdge = <T>(
     return { ...graph, lastUpdated: Date.now() };
 };
 
-export const getNeighbors = <T>(graph: Graph<T>, vertex: T): T[] | undefined =>
-    graph.graph.get(vertex);
-
 export const removeVertex = <T>(graph: Graph<T>, vertex: T): Graph<T> => {
     graph.graph.delete(vertex);
     graph.graph.forEach((neighbors) => {

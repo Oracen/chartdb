@@ -1,19 +1,5 @@
-import type { Diagram } from '@/lib/domain/diagram';
-import type { Template } from './templates-data';
 import { removeDups } from '@/lib/utils';
-import { cloneDiagram } from '@/lib/clone';
-
-export const convertTemplateToNewDiagram = (template: Template): Diagram => {
-    const diagramId = template.diagram.id;
-
-    const clonedDiagram = cloneDiagram(template.diagram);
-
-    return {
-        ...template.diagram,
-        ...clonedDiagram,
-        id: diagramId,
-    };
-};
+import type { Template } from './templates-data';
 
 export const getTemplatesAndAllTags = async ({
     featured,
