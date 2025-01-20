@@ -12,7 +12,6 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import { cloneTable } from '@/lib/clone';
@@ -48,7 +47,6 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
 
     const { fitView, setNodes } = useReactFlow();
     const { hideSidePanel } = useLayout();
-    const { isMd: isDesktop } = useBreakpoint('md');
 
     const focusOnTable = useCallback(
         (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -76,12 +74,8 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
                     },
                 ],
             });
-
-            if (!isDesktop) {
-                hideSidePanel();
-            }
         },
-        [fitView, table.id, setNodes, hideSidePanel, isDesktop]
+        [fitView, table.id, setNodes, hideSidePanel]
     );
 
     const deleteTableHandler = useCallback(() => {

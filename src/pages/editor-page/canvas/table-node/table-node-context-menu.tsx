@@ -4,7 +4,6 @@ import {
     ContextMenuItem,
     ContextMenuTrigger,
 } from '@/components/context-menu/context-menu';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import { cloneTable } from '@/lib/clone';
@@ -23,7 +22,6 @@ export const TableNodeContextMenu: React.FC<
     const { removeTable, readonly, createTable } = useChartDB();
     const { openTableFromSidebar } = useLayout();
     const { t } = useTranslation();
-    const { isMd: isDesktop } = useBreakpoint('md');
 
     const duplicateTableHandler = useCallback(() => {
         const clonedTable = cloneTable(table);
@@ -43,7 +41,7 @@ export const TableNodeContextMenu: React.FC<
         removeTable(table.id);
     }, [removeTable, table.id]);
 
-    if (!isDesktop || readonly) {
+    if (readonly) {
         return <>{children}</>;
     }
     return (

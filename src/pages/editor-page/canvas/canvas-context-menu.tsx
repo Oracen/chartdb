@@ -4,7 +4,6 @@ import {
     ContextMenuItem,
     ContextMenuTrigger,
 } from '@/components/context-menu/context-menu';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useChartDB } from '@/hooks/use-chartdb';
 import { useReactFlow } from '@xyflow/react';
 import React, { useCallback } from 'react';
@@ -18,8 +17,6 @@ export const CanvasContextMenu: React.FC<React.PropsWithChildren> = ({
     const { screenToFlowPosition } = useReactFlow();
     const { t } = useTranslation();
 
-    const { isMd: isDesktop } = useBreakpoint('md');
-
     const createTableHandler = useCallback(
         (_: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             console.error('Not implemented: createTableHandler');
@@ -27,7 +24,7 @@ export const CanvasContextMenu: React.FC<React.PropsWithChildren> = ({
         [createTable, screenToFlowPosition, schemas, filteredSchemas]
     );
 
-    if (!isDesktop || readonly) {
+    if (readonly) {
         return <>{children}</>;
     }
 

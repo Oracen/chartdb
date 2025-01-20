@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
 import { Accordion } from '@/components/accordion/accordion';
 import { useLayout } from '@/hooks/use-layout';
 import type { DBDependency } from '@/lib/domain/db-dependency';
+import React, { useCallback } from 'react';
 import { DependencyListItem } from './dependency-list-item/dependency-list-item';
 
 export interface DependencyListProps {

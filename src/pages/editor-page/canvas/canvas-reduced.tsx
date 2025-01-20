@@ -5,7 +5,6 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { DBDependency } from '@/lib/domain/db-dependency';
 import { DBRelationship } from '@/lib/domain/db-relationship';
 import type { DBTable } from '@/lib/domain/db-table';
@@ -120,7 +119,6 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
     const dependencies: DBDependency[] = initialDependencies;
     const tables: DBTable[] = initialTables;
 
-    const { isMd: isDesktop } = useBreakpoint('md');
     const nodeTypes = useMemo(() => ({ table: TableNode }), []);
     const [highlightOverlappingTables, setHighlightOverlappingTables] =
         useState(false);
@@ -577,7 +575,7 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                     ) : null}
 
                     <Controls
-                        position={isDesktop ? 'bottom-center' : 'top-center'}
+                        position={'bottom-center'}
                         orientation="horizontal"
                         showZoom={false}
                         showFitView={false}
@@ -589,8 +587,8 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                     {showMiniMapOnCanvas && (
                         <MiniMap
                             style={{
-                                width: isDesktop ? 100 : 60,
-                                height: isDesktop ? 100 : 60,
+                                width: 100,
+                                height: 100,
                             }}
                         />
                     )}

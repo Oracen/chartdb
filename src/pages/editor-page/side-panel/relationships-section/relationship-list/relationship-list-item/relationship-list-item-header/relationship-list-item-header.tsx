@@ -1,16 +1,3 @@
-import React, { useCallback } from 'react';
-import {
-    Pencil,
-    EllipsisVertical,
-    CircleDotDashed,
-    Trash2,
-    Check,
-} from 'lucide-react';
-import { ListItemHeaderButton } from '../../../../list-item-header-button/list-item-header-button';
-import type { DBRelationship } from '@/lib/domain/db-relationship';
-import { useReactFlow } from '@xyflow/react';
-import { useChartDB } from '@/hooks/use-chartdb';
-import { useClickAway, useKeyPressEvent } from 'react-use';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -21,8 +8,21 @@ import {
     DropdownMenuTrigger,
 } from '@/components/dropdown-menu/dropdown-menu';
 import { Input } from '@/components/input/input';
+import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
+import type { DBRelationship } from '@/lib/domain/db-relationship';
+import { useReactFlow } from '@xyflow/react';
+import {
+    Check,
+    CircleDotDashed,
+    EllipsisVertical,
+    Pencil,
+    Trash2,
+} from 'lucide-react';
+import React, { useCallback } from 'react';
+import { useClickAway, useKeyPressEvent } from 'react-use';
+import { ListItemHeaderButton } from '../../../../list-item-header-button/list-item-header-button';
+
 import { useTranslation } from 'react-i18next';
 
 export interface RelationshipListItemHeaderProps {
@@ -37,7 +37,6 @@ export const RelationshipListItemHeader: React.FC<
     const { t } = useTranslation();
     const { hideSidePanel } = useLayout();
     const [editMode, setEditMode] = React.useState(false);
-    const { isMd: isDesktop } = useBreakpoint('md');
     const [relationshipName, setRelationshipName] = React.useState(
         relationship.name
     );
@@ -99,10 +98,6 @@ export const RelationshipListItemHeader: React.FC<
                     },
                 ],
             });
-
-            if (!isDesktop) {
-                hideSidePanel();
-            }
         },
         [
             fitView,
@@ -110,7 +105,6 @@ export const RelationshipListItemHeader: React.FC<
             relationship.targetTableId,
             setEdges,
             relationship.id,
-            isDesktop,
             hideSidePanel,
         ]
     );

@@ -1,8 +1,3 @@
-import React, { useCallback, useMemo } from 'react';
-import { EllipsisVertical, CircleDotDashed, Trash2 } from 'lucide-react';
-import { ListItemHeaderButton } from '../../../../list-item-header-button/list-item-header-button';
-import { useReactFlow } from '@xyflow/react';
-import { useChartDB } from '@/hooks/use-chartdb';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,10 +7,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/dropdown-menu/dropdown-menu';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { useTranslation } from 'react-i18next';
-import type { DBDependency } from '@/lib/domain/db-dependency';
+import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
+import type { DBDependency } from '@/lib/domain/db-dependency';
+import { useReactFlow } from '@xyflow/react';
+import { CircleDotDashed, EllipsisVertical, Trash2 } from 'lucide-react';
+import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ListItemHeaderButton } from '../../../../list-item-header-button/list-item-header-button';
 
 export interface DependencyListItemHeaderProps {
     dependency: DBDependency;
@@ -28,7 +27,6 @@ export const DependencyListItemHeader: React.FC<
     const { fitView, deleteElements, setEdges } = useReactFlow();
     const { t } = useTranslation();
     const { hideSidePanel } = useLayout();
-    const { isMd: isDesktop } = useBreakpoint('md');
 
     const dependencyName = useMemo(() => {
         const table = getTable(dependency.tableId);
@@ -71,10 +69,6 @@ export const DependencyListItemHeader: React.FC<
                     },
                 ],
             });
-
-            if (!isDesktop) {
-                hideSidePanel();
-            }
         },
         [
             fitView,
@@ -82,7 +76,7 @@ export const DependencyListItemHeader: React.FC<
             dependency.dependentTableId,
             setEdges,
             dependency.id,
-            isDesktop,
+
             hideSidePanel,
         ]
     );
