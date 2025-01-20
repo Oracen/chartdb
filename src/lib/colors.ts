@@ -16,6 +16,3 @@ export const colorOptions = [
 export const randomColor = () => {
     return colorOptions[Math.floor(Math.random() * colorOptions.length)];
 };
-
-export const viewColor = '#b0b0b0';
-export const materializedViewColor = '#7d7d7d';
