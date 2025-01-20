@@ -1,11 +1,11 @@
+import { DatabaseType } from '@/lib/domain/database-type';
 import type { Diagram } from '@/lib/domain/diagram';
-import EmployeeExample from '../../../assets/examples/employees_example.png';
-import EmployeeExampleDark from '../../../assets/examples/employees_example_dark.png';
 import BikeStoresExample from '../../../assets/examples/bike_stores_example.png';
 import BikeStoresExampleDark from '../../../assets/examples/bike_stores_example_dark.png';
 import DVDRentalExample from '../../../assets/examples/dvd_rental_example.png';
 import DVDRentalExampleDark from '../../../assets/examples/dvd_rental_example_dark.png';
-import { DatabaseType } from '@/lib/domain/database-type';
+import EmployeeExample from '../../../assets/examples/employees_example.png';
+import EmployeeExampleDark from '../../../assets/examples/employees_example_dark.png';
 
 export interface Example {
     id: string;
@@ -60,22 +60,7 @@ export const examples: Example[] = [
                             createdAt: Date.now(),
                         },
                     ],
-                    indexes: [
-                        {
-                            id: '87iu197demih0wymjooqm9dmh',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['gaj3scrtaz46ezfmc162ingxf'],
-                            createdAt: Date.now(),
-                        },
-                        {
-                            id: 'ltt6su8loqpf29ok7okzqblg2',
-                            name: 'dept_name',
-                            unique: true,
-                            fieldIds: ['pb0j4xvevy9dics5euelx7ay9'],
-                            createdAt: Date.now(),
-                        },
-                    ],
+                    indexes: [],
                     color: '#b067e9',
                     isView: false,
                     isMaterializedView: false,
@@ -126,29 +111,7 @@ export const examples: Example[] = [
                             createdAt: Date.now(),
                         },
                     ],
-                    indexes: [
-                        {
-                            id: 'rqb91465yc51xpvd54o5a8d0l',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['wcgycjif09xrq0ly3txkq6ocu'],
-                            createdAt: Date.now(),
-                        },
-                        {
-                            id: '8wh6op49abv143qdfjzm211xj',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['jdw1yrh9xf1i7927gzs9pob2p'],
-                            createdAt: Date.now(),
-                        },
-                        {
-                            id: 'iw9hjbmuchq0jisgd8zb13qy6',
-                            name: 'dept_no',
-                            unique: false,
-                            fieldIds: ['jdw1yrh9xf1i7927gzs9pob2p'],
-                            createdAt: Date.now(),
-                        },
-                    ],
+                    indexes: [],
                     color: '#8a61f5',
                     isView: false,
                     isMaterializedView: false,
@@ -199,29 +162,7 @@ export const examples: Example[] = [
                             createdAt: Date.now(),
                         },
                     ],
-                    indexes: [
-                        {
-                            id: 'cbahnbrxaaj7cg29act50izy4',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['ecx2zbzdc5o54e04aeg7tlg54'],
-                            createdAt: Date.now(),
-                        },
-                        {
-                            id: 'vgxv8rkf4890yf659o2oklffv',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['v8plj7wq1cly03y178bysft2f'],
-                            createdAt: Date.now(),
-                        },
-                        {
-                            id: '60gtoaq9vnwwbii97ks47ph82',
-                            name: 'dept_no',
-                            unique: false,
-                            fieldIds: ['v8plj7wq1cly03y178bysft2f'],
-                            createdAt: Date.now(),
-                        },
-                    ],
+                    indexes: [],
                     color: '#ff6363',
                     isView: false,
                     isMaterializedView: false,
@@ -294,15 +235,7 @@ export const examples: Example[] = [
                             createdAt: Date.now(),
                         },
                     ],
-                    indexes: [
-                        {
-                            id: '8zg1ccoj4jb4kv6eleih38ni5',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['04csyx8ds9t3rh93txiqs4dm4'],
-                            createdAt: Date.now(),
-                        },
-                    ],
+                    indexes: [],
                     color: '#4dee8a',
                     isView: false,
                     isMaterializedView: false,
@@ -363,22 +296,7 @@ export const examples: Example[] = [
                             createdAt: Date.now(),
                         },
                     ],
-                    indexes: [
-                        {
-                            id: 'nky2wepp8yr5g6rzvnbta1hxb',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['b8c9v5vtpbnt5tjzcd3iat85f'],
-                            createdAt: Date.now(),
-                        },
-                        {
-                            id: 'w40nnsrsnlz7z7vycs4yf0s8d',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['0s10erufqpl6y3hpqmvbcneol'],
-                            createdAt: Date.now(),
-                        },
-                    ],
+                    indexes: [],
                     color: '#ff6b8a',
                     isView: false,
                     isMaterializedView: false,
@@ -430,29 +348,7 @@ export const examples: Example[] = [
                             createdAt: Date.now(),
                         },
                     ],
-                    indexes: [
-                        {
-                            id: 'ijhmb7tq6i4fd72ndvotnwo45',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['hr2gdoc0wtwvs4pfqo6m0fwc3'],
-                            createdAt: Date.now(),
-                        },
-                        {
-                            id: 'wgneqfte0nq7d5vzed2hcqie6',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['5evr59tury66sayiu59esoc61'],
-                            createdAt: Date.now(),
-                        },
-                        {
-                            id: 'jbe9t9adhluqy8d3i7w1vgygd',
-                            name: 'PRIMARY',
-                            unique: true,
-                            fieldIds: ['0vs1nqvrb6t53niz5ns2eskre'],
-                            createdAt: Date.now(),
-                        },
-                    ],
+                    indexes: [],
                     color: '#b067e9',
                     isView: false,
                     isMaterializedView: false,
@@ -558,7 +454,6 @@ export const examples: Example[] = [
                     targetTableId: '1c03hu41ko98myywerwbazeli',
                     sourceFieldId: 'wcgycjif09xrq0ly3txkq6ocu',
                     targetFieldId: '04csyx8ds9t3rh93txiqs4dm4',
-
                     sourceCardinality: 'many',
                     targetCardinality: 'one',
                     createdAt: Date.now(),
@@ -570,7 +465,6 @@ export const examples: Example[] = [
                     targetTableId: '6e70s6dhdfnve9xljbih6bo7x',
                     sourceFieldId: 'jdw1yrh9xf1i7927gzs9pob2p',
                     targetFieldId: 'gaj3scrtaz46ezfmc162ingxf',
-
                     sourceCardinality: 'many',
                     targetCardinality: 'one',
                     createdAt: Date.now(),
@@ -582,7 +476,6 @@ export const examples: Example[] = [
                     targetTableId: '1c03hu41ko98myywerwbazeli',
                     sourceFieldId: 'ecx2zbzdc5o54e04aeg7tlg54',
                     targetFieldId: '04csyx8ds9t3rh93txiqs4dm4',
-
                     sourceCardinality: 'many',
                     targetCardinality: 'one',
                     createdAt: Date.now(),
@@ -594,7 +487,6 @@ export const examples: Example[] = [
                     targetTableId: '6e70s6dhdfnve9xljbih6bo7x',
                     sourceFieldId: 'v8plj7wq1cly03y178bysft2f',
                     targetFieldId: 'gaj3scrtaz46ezfmc162ingxf',
-
                     sourceCardinality: 'many',
                     targetCardinality: 'one',
                     createdAt: Date.now(),
@@ -606,7 +498,6 @@ export const examples: Example[] = [
                     targetTableId: '1c03hu41ko98myywerwbazeli',
                     sourceFieldId: 'b8c9v5vtpbnt5tjzcd3iat85f',
                     targetFieldId: '04csyx8ds9t3rh93txiqs4dm4',
-
                     sourceCardinality: 'many',
                     targetCardinality: 'one',
                     createdAt: Date.now(),
@@ -618,7 +509,6 @@ export const examples: Example[] = [
                     targetTableId: '1c03hu41ko98myywerwbazeli',
                     sourceFieldId: 'hr2gdoc0wtwvs4pfqo6m0fwc3',
                     targetFieldId: '04csyx8ds9t3rh93txiqs4dm4',
-
                     sourceCardinality: 'many',
                     targetCardinality: 'one',
                     createdAt: Date.now(),

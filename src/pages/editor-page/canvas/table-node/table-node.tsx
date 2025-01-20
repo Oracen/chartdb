@@ -3,6 +3,7 @@ import { Label } from '@/components/label/label';
 import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import type { DBField } from '@/lib/domain/db-field';
+import { DBRelationship } from '@/lib/domain/db-relationship';
 import type { DBTable } from '@/lib/domain/db-table';
 import { cn } from '@/lib/utils';
 import type { Node, NodeProps } from '@xyflow/react';
@@ -28,6 +29,7 @@ export type TableNodeType = Node<
 
         isOverlapping: boolean;
         highlightOverlappingTables?: boolean;
+        relationships: DBRelationship[];
     },
     'table'
 >;
@@ -42,9 +44,14 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
         selected,
         dragging,
         id,
-        data: { table, isOverlapping, highlightOverlappingTables },
+        data: {
+            table,
+            isOverlapping,
+            highlightOverlappingTables,
+            relationships,
+        },
     }) => {
-        const { updateTable, relationships } = useChartDB();
+        const { updateTable } = useChartDB();
         const edges = useStore((store) => store.edges) as EdgeType[];
         const { openTableFromSidebar, selectSidebarSection } = useLayout();
         const [expanded, setExpanded] = useState(false);
@@ -211,6 +218,7 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
                                         edge.data?.relationship
                                             .targetFieldId === field.id
                                 )}
+                                relationships={relationships}
                                 visible={visibleFields.includes(field)}
                                 isConnectable={!table.isView}
                             />

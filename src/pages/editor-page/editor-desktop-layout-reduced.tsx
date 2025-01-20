@@ -16,39 +16,24 @@ export interface EditorDesktopLayoutProps {
 export const EditorDesktopLayout: React.FC<EditorDesktopLayoutProps> = ({
     initialDiagram,
 }) => {
-    console.log(initialDiagram);
-    const isSidePanelShowed = true;
-
     const initialTables = initialDiagram?.tables || [];
     const initialRelationships = initialDiagram?.relationships || [];
     const initialDependencies = initialDiagram?.dependencies || [];
 
     return (
-        <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel
-                defaultSize={25}
-                minSize={25}
-                maxSize={isSidePanelShowed ? 99 : 0}
-                className={cn('transition-[flex-grow] duration-200 ', {
-                    'min-w-[350px]': isSidePanelShowed,
-                })}
-            >
-                <SidePanel
-                    initialFilteredSchemas={[]}
-                    initialTables={initialTables}
-                    initialRelationships={initialRelationships}
-                    initialDependencies={initialDependencies}
-                />
-            </ResizablePanel>
-            <ResizableHandle disabled={false} />
-            <ResizablePanel defaultSize={75}>
-                <CanvasReduced
-                    initialTables={initialTables}
-                    initialRelationships={initialRelationships}
-                    initialDependencies={initialDependencies}
-                />
-            </ResizablePanel>
-        </ResizablePanelGroup>
+        <div className="h-full w-full">
+            <CanvasReduced
+                initialTables={initialTables}
+                initialRelationships={initialRelationships}
+                initialDependencies={initialDependencies}
+            />
+            <SidePanel
+                initialFilteredSchemas={[]}
+                initialTables={initialTables}
+                initialRelationships={initialRelationships}
+                initialDependencies={initialDependencies}
+            />
+        </div>
     );
 };
 

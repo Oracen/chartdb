@@ -19,14 +19,8 @@ import { ReactFlowProvider } from '@xyflow/react';
 export function TestPageHome() {
     const diagram = examples[0].diagram;
 
-    const [initialDiagram, setInitialDiagram] = React.useState(diagram);
-
-    useEffect(() => {
-        setInitialDiagram(diagram);
-        console.log(initialDiagram);
-    }, []);
     return (
-        <div className="w-screen h-screen">
+        <div className=" w-screen h-screen">
             <h1>Test Page</h1>
             {/* <ReactFlowProvider>
                 <EditorDesktopLayout initialDiagram={diagram} />
@@ -46,7 +40,7 @@ export function TestPageHome() {
                                                             <KeyboardShortcutsProvider>
                                                                 <EditorDesktopLayoutReduced
                                                                     initialDiagram={
-                                                                        initialDiagram
+                                                                        diagram
                                                                     }
                                                                 />
                                                             </KeyboardShortcutsProvider>

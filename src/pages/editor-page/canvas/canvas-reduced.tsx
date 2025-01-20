@@ -78,6 +78,7 @@ const effectiveTheme = 'light';
 
 const tableToTableNode = (
     table: DBTable,
+    relationships: DBRelationship[],
     filteredSchemas?: string[]
 ): TableNodeType => ({
     id: table.id,
@@ -86,6 +87,7 @@ const tableToTableNode = (
     data: {
         table,
         isOverlapping: false,
+        relationships: relationships,
     },
     width: table.width ?? MIN_TABLE_SIZE,
     hidden: !shouldShowTablesBySchemaFilter(table, filteredSchemas),
@@ -130,7 +132,9 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
         useState<Graph<string>>(createGraph());
 
     const [nodes, setNodes, onNodesChange] = useNodesState<TableNodeType>(
-        initialTables.map((table) => tableToTableNode(table, filteredSchemas))
+        initialTables.map((table) =>
+            tableToTableNode(table, relationships, filteredSchemas)
+        )
     );
     const [edges, setEdges, onEdgesChange] =
         useEdgesState<EdgeType>(initialEdges);
@@ -143,7 +147,7 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
 
     useEffect(() => {
         const initialNodes = initialTables.map((table) =>
-            tableToTableNode(table, filteredSchemas)
+            tableToTableNode(table, relationships, filteredSchemas)
         );
         if (equal(initialNodes, nodes)) {
             setIsInitialLoadingNodes(false);
@@ -181,32 +185,14 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
             {} as Record<string, number>
         );
 
-        console.log('nodes', nodes);
-        console.log(relationships);
-
-        console.log(
-            relationships.map(
-                (relationship): RelationshipEdgeType => ({
-                    id: relationship.id,
-                    source: relationship.sourceTableId,
-                    target: relationship.targetTableId,
-
-                    sourceHandle: `${LEFT_HANDLE_ID_PREFIX}${relationship.sourceFieldId}`,
-                    targetHandle: `${TARGET_ID_PREFIX}${targetIndexes[`${relationship.targetTableId}${relationship.targetFieldId}`]++}_${relationship.targetFieldId}`,
-                    type: 'relationship-edge',
-                    data: { relationship },
-                })
-            )
-        );
-
         setEdges([
             ...relationships.map(
                 (relationship): RelationshipEdgeType => ({
                     id: relationship.id,
                     source: relationship.sourceTableId,
                     target: relationship.targetTableId,
-                    // sourceHandle: `${LEFT_HANDLE_ID_PREFIX}${relationship.sourceFieldId}`,
-                    // targetHandle: `${TARGET_ID_PREFIX}${targetIndexes[`${relationship.targetTableId}${relationship.targetFieldId}`]++}_${relationship.targetFieldId}`,
+                    sourceHandle: `${LEFT_HANDLE_ID_PREFIX}${relationship.sourceFieldId}`,
+                    targetHandle: `${TARGET_ID_PREFIX}${targetIndexes[`${relationship.targetTableId}${relationship.targetFieldId}`]++}_${relationship.targetFieldId}`,
                     type: 'relationship-edge',
                     data: { relationship },
                 })
@@ -216,8 +202,8 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                     id: dep.id,
                     source: dep.dependentTableId,
                     target: dep.tableId,
-                    // sourceHandle: `${TOP_SOURCE_HANDLE_ID_PREFIX}${dep.dependentTableId}`,
-                    // targetHandle: `${TARGET_DEP_PREFIX}${targetDepIndexes[dep.tableId]++}_${dep.tableId}`,
+                    sourceHandle: `${TOP_SOURCE_HANDLE_ID_PREFIX}${dep.dependentTableId}`,
+                    targetHandle: `${TARGET_DEP_PREFIX}${targetDepIndexes[dep.tableId]++}_${dep.tableId}`,
                     type: 'dependency-edge',
                     data: { dependency: dep },
                     hidden: false,
@@ -300,7 +286,11 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
             tables.map((table) => {
                 const isOverlapping =
                     (overlapGraph.graph.get(table.id) ?? []).length > 0;
-                const node = tableToTableNode(table, filteredSchemas);
+                const node = tableToTableNode(
+                    table,
+                    relationships,
+                    filteredSchemas
+                );
                 return {
                     ...node,
                     data: {

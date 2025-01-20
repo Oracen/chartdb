@@ -3,8 +3,8 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useChartDB } from '@/hooks/use-chartdb';
 import type { DBField } from '@/lib/domain/db-field';
+import { DBRelationship } from '@/lib/domain/db-relationship';
 import { cn } from '@/lib/utils';
 import {
     Handle,
@@ -26,11 +26,78 @@ export interface TableNodeFieldProps {
     highlighted: boolean;
     visible: boolean;
     isConnectable: boolean;
+    relationships: DBRelationship[];
 }
 
+const buildConnection = (
+    fieldId: string,
+    focused: boolean,
+    readonly: boolean
+) => {
+    return (
+        <>
+            <Handle
+                id={`${RIGHT_HANDLE_ID_PREFIX}${fieldId}`}
+                className={`!h-4 !w-4 !border-2 !bg-pink-600 ${!focused || readonly ? '!invisible' : ''}`}
+                position={Position.Right}
+                type="source"
+            />
+            <Handle
+                id={`${LEFT_HANDLE_ID_PREFIX}${fieldId}`}
+                className={`!h-4 !w-4 !border-2 !bg-pink-600 ${!focused || readonly ? '!invisible' : ''}`}
+                position={Position.Left}
+                type="source"
+            />
+        </>
+    );
+};
+
+const buildTarget = (
+    numberOfEdgesToField: number,
+    fieldId: string,
+    isTarget: boolean
+) => {
+    return (
+        <>
+            {Array.from(
+                { length: numberOfEdgesToField },
+                (_, index) => index
+            ).map((index) => {
+                return (
+                    <Handle
+                        id={`${TARGET_ID_PREFIX}${index}_${fieldId}`}
+                        key={`${TARGET_ID_PREFIX}${index}_${fieldId}`}
+                        className={`!invisible`}
+                        position={Position.Left}
+                        type="target"
+                    />
+                );
+            })}
+            <Handle
+                id={`${TARGET_ID_PREFIX}${numberOfEdgesToField}_${fieldId}`}
+                className={
+                    isTarget
+                        ? '!absolute !left-0 !top-0 !h-full !w-full !transform-none !rounded-none !border-none !opacity-0'
+                        : `!invisible`
+                }
+                position={Position.Left}
+                type="target"
+            />
+        </>
+    );
+};
+
 export const TableNodeField: React.FC<TableNodeFieldProps> = React.memo(
-    ({ field, focused, tableNodeId, highlighted, visible, isConnectable }) => {
-        const { relationships, readonly } = useChartDB();
+    ({
+        field,
+        focused,
+        tableNodeId,
+        highlighted,
+        visible,
+        isConnectable,
+        relationships,
+    }) => {
+        const readonly = false;
 
         const updateNodeInternals = useUpdateNodeInternals();
         const connection = useConnection();
@@ -75,48 +142,12 @@ export const TableNodeField: React.FC<TableNodeFieldProps> = React.memo(
                         : 'z-0 max-h-0 overflow-hidden opacity-0'
                 }`}
             >
-                {isConnectable ? (
-                    <>
-                        <Handle
-                            id={`${RIGHT_HANDLE_ID_PREFIX}${field.id}`}
-                            className={`!h-4 !w-4 !border-2 !bg-pink-600 ${!focused || readonly ? '!invisible' : ''}`}
-                            position={Position.Right}
-                            type="source"
-                        />
-                        <Handle
-                            id={`${LEFT_HANDLE_ID_PREFIX}${field.id}`}
-                            className={`!h-4 !w-4 !border-2 !bg-pink-600 ${!focused || readonly ? '!invisible' : ''}`}
-                            position={Position.Left}
-                            type="source"
-                        />
-                    </>
-                ) : null}
-                {(!connection.inProgress || isTarget) && isConnectable && (
-                    <>
-                        {Array.from(
-                            { length: numberOfEdgesToField },
-                            (_, index) => index
-                        ).map((index) => (
-                            <Handle
-                                id={`${TARGET_ID_PREFIX}${index}_${field.id}`}
-                                key={`${TARGET_ID_PREFIX}${index}_${field.id}`}
-                                className={`!invisible`}
-                                position={Position.Left}
-                                type="target"
-                            />
-                        ))}
-                        <Handle
-                            id={`${TARGET_ID_PREFIX}${numberOfEdgesToField}_${field.id}`}
-                            className={
-                                isTarget
-                                    ? '!absolute !left-0 !top-0 !h-full !w-full !transform-none !rounded-none !border-none !opacity-0'
-                                    : `!invisible`
-                            }
-                            position={Position.Left}
-                            type="target"
-                        />
-                    </>
-                )}
+                {isConnectable
+                    ? buildConnection(field.id, focused, readonly)
+                    : null}
+                {(!connection.inProgress || isTarget) &&
+                    isConnectable &&
+                    buildTarget(numberOfEdgesToField, field.id, isTarget!)}
                 <div
                     className={cn(
                         'flex items-center gap-1 truncate text-left',
