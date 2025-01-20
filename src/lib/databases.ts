@@ -1,27 +1,26 @@
+import ClickhouseLogo from '@/assets/clickhouse_logo.png';
+import ClickhouseLogo2 from '@/assets/clickhouse_logo_2.png';
+import ClickhouseLogoDark from '@/assets/clickhouse_logo_dark.png';
+import CockroachDBLogo from '@/assets/cockroachdb_logo.png';
+import CockroachDBLogo2 from '@/assets/cockroachdb_logo_2.png';
+import CockroachDBLogoDark from '@/assets/cockroachdb_logo_dark.png';
+import GeneralDBLogo2 from '@/assets/general_db_logo_2.png';
+import MariaDBLogo from '@/assets/mariadb_logo.png';
+import MariaDBLogo2 from '@/assets/mariadb_logo_2.png';
+import MariaDBLogoDark from '@/assets/mariadb_logo_dark.png';
 import MysqlLogo from '@/assets/mysql_logo.png';
+import MysqlLogo2 from '@/assets/mysql_logo_2.png';
 import MysqlLogoDark from '@/assets/mysql_logo_dark.png';
 import PostgresqlLogo from '@/assets/postgresql_logo.png';
-import PostgresqlLogoDark from '@/assets/postgresql_logo_dark.png';
-import MariaDBLogo from '@/assets/mariadb_logo.png';
-import MariaDBLogoDark from '@/assets/mariadb_logo_dark.png';
-import SqliteLogo from '@/assets/sqlite_logo.png';
-import SqliteLogoDark from '@/assets/sqlite_logo_dark.png';
-import SqlServerLogo from '@/assets/sql_server_logo.png';
-import SqlServerLogoDark from '@/assets/sql_server_logo_dark.png';
-import MysqlLogo2 from '@/assets/mysql_logo_2.png';
 import PostgresqlLogo2 from '@/assets/postgresql_logo_2.png';
-import MariaDBLogo2 from '@/assets/mariadb_logo_2.png';
-import SqliteLogo2 from '@/assets/sqlite_logo_2.png';
+import PostgresqlLogoDark from '@/assets/postgresql_logo_dark.png';
+import SqlServerLogo from '@/assets/sql_server_logo.png';
 import SqlServerLogo2 from '@/assets/sql_server_logo_2.png';
-import GeneralDBLogo2 from '@/assets/general_db_logo_2.png';
-import ClickhouseLogo from '@/assets/clickhouse_logo.png';
-import ClickhouseLogoDark from '@/assets/clickhouse_logo_dark.png';
-import ClickhouseLogo2 from '@/assets/clickhouse_logo_2.png';
-import CockroachDBLogo from '@/assets/cockroachdb_logo.png';
-import CockroachDBLogoDark from '@/assets/cockroachdb_logo_dark.png';
-import CockroachDBLogo2 from '@/assets/cockroachdb_logo_2.png';
+import SqlServerLogoDark from '@/assets/sql_server_logo_dark.png';
+import SqliteLogo from '@/assets/sqlite_logo.png';
+import SqliteLogo2 from '@/assets/sqlite_logo_2.png';
+import SqliteLogoDark from '@/assets/sqlite_logo_dark.png';
 import { DatabaseType } from './domain/database-type';
-import type { EffectiveTheme } from '@/context/theme-context/theme-context';
 
 export const databaseTypeToLabelMap: Record<DatabaseType, string> = {
     [DatabaseType.GENERIC]: 'Generic',
@@ -55,14 +54,6 @@ export const databaseDarkLogoMap: Record<DatabaseType, string> = {
     [DatabaseType.COCKROACHDB]: CockroachDBLogoDark,
     [DatabaseType.GENERIC]: '',
 };
-
-export const getDatabaseLogo = (
-    databaseType: DatabaseType,
-    theme: EffectiveTheme
-) =>
-    theme === 'dark'
-        ? databaseDarkLogoMap[databaseType]
-        : databaseLogoMap[databaseType];
 
 export const databaseSecondaryLogoMap: Record<DatabaseType, string> = {
     [DatabaseType.MYSQL]: MysqlLogo2,

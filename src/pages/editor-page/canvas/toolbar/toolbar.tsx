@@ -1,18 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import { Button } from '@/components/button/button';
 import { Card, CardContent } from '@/components/card/card';
-import { ZoomIn, ZoomOut, Save, Redo, Undo, Scan } from 'lucide-react';
 import { Separator } from '@/components/separator/separator';
-import { ToolbarButton } from './toolbar-button';
-import { useHistory } from '@/hooks/use-history';
-import { useChartDB } from '@/hooks/use-chartdb';
-import { useOnViewportChange, useReactFlow } from '@xyflow/react';
 import {
     Tooltip,
-    TooltipTrigger,
     TooltipContent,
+    TooltipTrigger,
 } from '@/components/tooltip/tooltip';
+import { useChartDB } from '@/hooks/use-chartdb';
+
+import { useOnViewportChange, useReactFlow } from '@xyflow/react';
+import { Save, Scan, ZoomIn, ZoomOut } from 'lucide-react';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/button/button';
+import { ToolbarButton } from './toolbar-button';
 
 const convertToPercentage = (value: number) => `${Math.round(value * 100)}%`;
 
@@ -23,7 +23,6 @@ export interface ToolbarProps {
 export const Toolbar: React.FC<ToolbarProps> = ({ readonly }) => {
     const { updateDiagramUpdatedAt } = useChartDB();
     const { t } = useTranslation();
-    const { redo, undo, hasRedo, hasUndo } = useHistory();
     const { getZoom, zoomIn, zoomOut, fitView } = useReactFlow();
     const [zoom, setZoom] = useState<string>(convertToPercentage(getZoom()));
     useOnViewportChange({
@@ -119,32 +118,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({ readonly }) => {
                         <TooltipContent>{t('toolbar.zoom_in')}</TooltipContent>
                     </Tooltip>
                     <Separator orientation="vertical" />
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <span>
-                                <ToolbarButton
-                                    onClick={undo}
-                                    disabled={!hasUndo}
-                                >
-                                    <Undo />
-                                </ToolbarButton>
-                            </span>
-                        </TooltipTrigger>
-                        <TooltipContent>{t('toolbar.undo')}</TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <span>
-                                <ToolbarButton
-                                    onClick={redo}
-                                    disabled={!hasRedo}
-                                >
-                                    <Redo />
-                                </ToolbarButton>
-                            </span>
-                        </TooltipTrigger>
-                        <TooltipContent>{t('toolbar.redo')}</TooltipContent>
-                    </Tooltip>
                 </CardContent>
             </Card>
         </div>

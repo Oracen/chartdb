@@ -7,12 +7,12 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useDialog } from '@/hooks/use-dialog';
+
 import { useLayout } from '@/hooks/use-layout';
 import type { DBRelationship } from '@/lib/domain/db-relationship';
 import { shouldShowRelationshipBySchemaFilter } from '@/lib/domain/db-relationship';
 import { ListCollapse, Workflow } from 'lucide-react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RelationshipList } from './relationship-list/relationship-list';
 
@@ -28,7 +28,6 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({
     const [filterText, setFilterText] = React.useState('');
     const { closeAllRelationshipsInSidebar } = useLayout();
     const { t } = useTranslation();
-    const { openCreateRelationshipDialog } = useDialog();
 
     const filteredRelationships = useMemo(() => {
         const filterName: (relationship: DBRelationship) => boolean = (
@@ -44,11 +43,6 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({
 
         return relationships.filter(filterSchema).filter(filterName);
     }, [relationships, filterText, filteredSchemas]);
-
-    const handleCreateRelationship = useCallback(async () => {
-        setFilterText('');
-        openCreateRelationshipDialog();
-    }, [openCreateRelationshipDialog, setFilterText]);
 
     return (
         <section className="flex flex-1 flex-col overflow-hidden px-2">
@@ -85,7 +79,9 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({
                 <Button
                     variant="secondary"
                     className="h-8 p-2 text-xs"
-                    onClick={handleCreateRelationship}
+                    onClick={() => {
+                        console.error('Not implemented');
+                    }}
                 >
                     <Workflow className="h-4" />
                     {t('side_panel.relationships_section.add_relationship')}

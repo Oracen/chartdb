@@ -1,10 +1,5 @@
-import {
-    ResizableHandle,
-    ResizablePanel,
-    ResizablePanelGroup,
-} from '@/components/resizable/resizable';
 import type { Diagram } from '@/lib/domain/diagram';
-import { cn } from '@/lib/utils';
+
 import React from 'react';
 
 import { CanvasReduced } from './canvas/canvas-reduced';

@@ -1,7 +1,7 @@
-import type { ForeignKeyInfo } from './foreign-key-info';
-import type { PrimaryKeyInfo } from './primary-key-info';
 import type { ColumnInfo } from './column-info';
+import type { ForeignKeyInfo } from './foreign-key-info';
 import type { IndexInfo } from './index-info';
+import type { PrimaryKeyInfo } from './primary-key-info';
 import type { TableInfo } from './table-info';
 import type { ViewInfo } from './view-info';
 export interface DatabaseMetadata {
@@ -25,13 +25,4 @@ export const isDatabaseMetadata = (obj: any): boolean => {
         Array.isArray(obj.tables) &&
         Array.isArray(obj.views)
     );
-};
-
-export const loadDatabaseMetadata = (jsonString: string): DatabaseMetadata => {
-    try {
-        const parsedData: DatabaseMetadata = JSON.parse(jsonString);
-        return parsedData;
-    } catch (parseError) {
-        throw new Error(`Error parsing JSON data: ${parseError}`);
-    }
 };

@@ -14,7 +14,6 @@ import {
 } from '@/components/tooltip/tooltip';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 import { useChartDB } from '@/hooks/use-chartdb';
-import { useDialog } from '@/hooks/use-dialog';
 import { useLayout } from '@/hooks/use-layout';
 import { cloneTable } from '@/lib/clone';
 import type { DBTable } from '@/lib/domain/db-table';
@@ -39,7 +38,6 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
     table,
 }) => {
     const {
-        updateTable,
         removeTable,
         createIndex,
         createField,
@@ -47,7 +45,7 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
         schemas,
         filteredSchemas,
     } = useChartDB();
-    const { openTableSchemaDialog } = useDialog();
+
     const { fitView, setNodes } = useReactFlow();
     const { hideSidePanel } = useLayout();
     const { isMd: isDesktop } = useBreakpoint('md');
@@ -90,21 +88,6 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
         removeTable(table.id);
     }, [table.id, removeTable]);
 
-    const updateTableSchema = useCallback(
-        (schema: string) => {
-            updateTable(table.id, { schema });
-        },
-        [table.id, updateTable]
-    );
-
-    const changeSchema = useCallback(() => {
-        openTableSchemaDialog({
-            table,
-            schemas,
-            onConfirm: updateTableSchema,
-        });
-    }, [openTableSchemaDialog, table, schemas, updateTableSchema]);
-
     const duplicateTableHandler = useCallback(
         (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             e.stopPropagation();
@@ -137,7 +120,7 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
                                     className="flex justify-between gap-4"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        changeSchema();
+                                        console.error('Not implemented');
                                     }}
                                 >
                                     Change Schema
@@ -199,7 +182,6 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
             deleteTableHandler,
             duplicateTableHandler,
 
-            changeSchema,
             schemas.length,
         ]
     );

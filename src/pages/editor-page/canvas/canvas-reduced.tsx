@@ -5,9 +5,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useAlert } from '@/context/alert-context/alert-context';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
-import { useLocalConfig } from '@/hooks/use-local-config';
 import { DBDependency } from '@/lib/domain/db-dependency';
 import { DBRelationship } from '@/lib/domain/db-relationship';
 import type { DBTable } from '@/lib/domain/db-table';
@@ -106,6 +104,9 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
     initialDependencies,
     readonly,
 }) => {
+    const showDependenciesOnCanvas = true;
+    const showMiniMapOnCanvas = true;
+
     const { getEdge, getInternalNode, fitView, getEdges, getNode } =
         useReactFlow();
     const [selectedTableIds, setSelectedTableIds] = useState<string[]>([]);
@@ -119,9 +120,6 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
     const dependencies: DBDependency[] = initialDependencies;
     const tables: DBTable[] = initialTables;
 
-    const { scrollAction, showDependenciesOnCanvas, showMiniMapOnCanvas } =
-        useLocalConfig();
-    const { showAlert } = useAlert();
     const { isMd: isDesktop } = useBreakpoint('md');
     const nodeTypes = useMemo(() => ({ table: TableNode }), []);
     const [highlightOverlappingTables, setHighlightOverlappingTables] =
@@ -431,16 +429,6 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
         setOverlapGraph(updatedOverlapGraph);
     }, [filteredSchemas, relationships, tables]);
 
-    const showReorderConfirmation = useCallback(() => {
-        showAlert({
-            title: t('reorder_diagram_alert.title'),
-            description: t('reorder_diagram_alert.description'),
-            actionLabel: t('reorder_diagram_alert.reorder'),
-            closeLabel: t('reorder_diagram_alert.cancel'),
-            onAction: reorderTables,
-        });
-    }, [t, showAlert, reorderTables]);
-
     const hasOverlappingTables = useMemo(() => {
         return Array.from(overlapGraph.graph).some(
             ([, value]) => value.length > 0
@@ -478,7 +466,7 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                         animated: false,
                         type: 'relationship-edge',
                     }}
-                    panOnScroll={scrollAction === 'pan'}
+                    panOnScroll={true}
                     snapToGrid={shiftPressed || snapToGridEnabled}
                     snapGrid={[20, 20]}
                 >
@@ -498,9 +486,7 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                                                 <Button
                                                     variant="secondary"
                                                     className="size-8 p-1 shadow-none"
-                                                    onClick={
-                                                        showReorderConfirmation
-                                                    }
+                                                    onClick={reorderTables}
                                                 >
                                                     <LayoutGrid className="size-4" />
                                                 </Button>
