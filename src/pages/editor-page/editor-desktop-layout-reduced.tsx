@@ -3,13 +3,12 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from '@/components/resizable/resizable';
-import { useLayout } from '@/hooks/use-layout';
 import type { Diagram } from '@/lib/domain/diagram';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
 import { CanvasReduced } from './canvas/canvas-reduced';
-import { SidePanel } from './side-panel/side-panel';
+import { SidePanel } from './side-panel/side-panel-reduced';
 
 export interface EditorDesktopLayoutProps {
     initialDiagram?: Diagram;
@@ -17,25 +16,36 @@ export interface EditorDesktopLayoutProps {
 export const EditorDesktopLayout: React.FC<EditorDesktopLayoutProps> = ({
     initialDiagram,
 }) => {
-    const { isSidePanelShowed } = useLayout();
+    console.log(initialDiagram);
+    const isSidePanelShowed = true;
+
+    const initialTables = initialDiagram?.tables || [];
+    const initialRelationships = initialDiagram?.relationships || [];
+    const initialDependencies = initialDiagram?.dependencies || [];
+
     return (
         <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
                 defaultSize={25}
                 minSize={25}
                 maxSize={isSidePanelShowed ? 99 : 0}
-                className={cn('transition-[flex-grow] duration-200', {
+                className={cn('transition-[flex-grow] duration-200 ', {
                     'min-w-[350px]': isSidePanelShowed,
                 })}
             >
-                <SidePanel />
+                <SidePanel
+                    initialFilteredSchemas={[]}
+                    initialTables={initialTables}
+                    initialRelationships={initialRelationships}
+                    initialDependencies={initialDependencies}
+                />
             </ResizablePanel>
-            <ResizableHandle disabled={!isSidePanelShowed} />
+            <ResizableHandle disabled={false} />
             <ResizablePanel defaultSize={75}>
                 <CanvasReduced
-                    initialTables={initialDiagram?.tables || []}
-                    initialRelationships={initialDiagram?.relationships || []}
-                    initialDependencies={initialDiagram?.dependencies || []}
+                    initialTables={initialTables}
+                    initialRelationships={initialRelationships}
+                    initialDependencies={initialDependencies}
                 />
             </ResizablePanel>
         </ResizablePanelGroup>

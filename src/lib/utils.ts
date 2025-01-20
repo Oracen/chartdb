@@ -55,10 +55,6 @@ export const debounce = <T extends (...args: Parameters<T>) => ReturnType<T>>(
     };
 };
 
-export const removeDups = <T>(array: T[]): T[] => {
-    return [...new Set(array)];
-};
-
 export const decodeBase64ToUtf16LE = (base64: string) => {
     const binaryString = atob(base64);
 

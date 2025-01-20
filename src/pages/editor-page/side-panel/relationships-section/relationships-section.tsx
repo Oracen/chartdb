@@ -1,26 +1,30 @@
-import React, { useCallback, useMemo } from 'react';
 import { Button } from '@/components/button/button';
-import { ListCollapse, Workflow } from 'lucide-react';
-import { Input } from '@/components/input/input';
-import { RelationshipList } from './relationship-list/relationship-list';
-import { useChartDB } from '@/hooks/use-chartdb';
-import type { DBRelationship } from '@/lib/domain/db-relationship';
-import { shouldShowRelationshipBySchemaFilter } from '@/lib/domain/db-relationship';
-import { useLayout } from '@/hooks/use-layout';
 import { EmptyState } from '@/components/empty-state/empty-state';
+import { Input } from '@/components/input/input';
 import { ScrollArea } from '@/components/scroll-area/scroll-area';
-import { useTranslation } from 'react-i18next';
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
 import { useDialog } from '@/hooks/use-dialog';
+import { useLayout } from '@/hooks/use-layout';
+import type { DBRelationship } from '@/lib/domain/db-relationship';
+import { shouldShowRelationshipBySchemaFilter } from '@/lib/domain/db-relationship';
+import { ListCollapse, Workflow } from 'lucide-react';
+import React, { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { RelationshipList } from './relationship-list/relationship-list';
 
-export interface RelationshipsSectionProps {}
+export interface RelationshipsSectionProps {
+    relationships: DBRelationship[];
+    filteredSchemas: string[];
+}
 
-export const RelationshipsSection: React.FC<RelationshipsSectionProps> = () => {
-    const { relationships, filteredSchemas } = useChartDB();
+export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({
+    relationships,
+    filteredSchemas,
+}) => {
     const [filterText, setFilterText] = React.useState('');
     const { closeAllRelationshipsInSidebar } = useLayout();
     const { t } = useTranslation();

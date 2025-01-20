@@ -11,15 +11,19 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import type { DBTable } from '@/lib/domain/db-table';
 import { shouldShowTablesBySchemaFilter } from '@/lib/domain/db-table';
 
-export interface TablesSectionProps {}
+export interface TablesSectionProps {
+    tables: DBTable[];
+    filteredSchemas: string[];
+}
 
-export const TablesSection: React.FC<TablesSectionProps> = () => {
-    const { tables, filteredSchemas } = useChartDB();
+export const TablesSection: React.FC<TablesSectionProps> = ({
+    tables,
+    filteredSchemas,
+}) => {
     const { closeAllTablesInSidebar } = useLayout();
     const [filterText, setFilterText] = React.useState('');
 

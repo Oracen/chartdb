@@ -38,17 +38,6 @@ export const addEdge = <T>(
     return { ...graph, lastUpdated: Date.now() };
 };
 
-export const removeVertex = <T>(graph: Graph<T>, vertex: T): Graph<T> => {
-    graph.graph.delete(vertex);
-    graph.graph.forEach((neighbors) => {
-        const index = neighbors.indexOf(vertex);
-        if (index !== -1) {
-            neighbors.splice(index, 1); // Remove the edge
-        }
-    });
-    return { ...graph, lastUpdated: Date.now() };
-};
-
 export const removeEdge = <T>(
     graph: Graph<T>,
     source: T,

@@ -181,14 +181,32 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
             {} as Record<string, number>
         );
 
+        console.log('nodes', nodes);
+        console.log(relationships);
+
+        console.log(
+            relationships.map(
+                (relationship): RelationshipEdgeType => ({
+                    id: relationship.id,
+                    source: relationship.sourceTableId,
+                    target: relationship.targetTableId,
+
+                    sourceHandle: `${LEFT_HANDLE_ID_PREFIX}${relationship.sourceFieldId}`,
+                    targetHandle: `${TARGET_ID_PREFIX}${targetIndexes[`${relationship.targetTableId}${relationship.targetFieldId}`]++}_${relationship.targetFieldId}`,
+                    type: 'relationship-edge',
+                    data: { relationship },
+                })
+            )
+        );
+
         setEdges([
             ...relationships.map(
                 (relationship): RelationshipEdgeType => ({
                     id: relationship.id,
                     source: relationship.sourceTableId,
                     target: relationship.targetTableId,
-                    sourceHandle: `${LEFT_HANDLE_ID_PREFIX}${relationship.sourceFieldId}`,
-                    targetHandle: `${TARGET_ID_PREFIX}${targetIndexes[`${relationship.targetTableId}${relationship.targetFieldId}`]++}_${relationship.targetFieldId}`,
+                    // sourceHandle: `${LEFT_HANDLE_ID_PREFIX}${relationship.sourceFieldId}`,
+                    // targetHandle: `${TARGET_ID_PREFIX}${targetIndexes[`${relationship.targetTableId}${relationship.targetFieldId}`]++}_${relationship.targetFieldId}`,
                     type: 'relationship-edge',
                     data: { relationship },
                 })
@@ -198,8 +216,8 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                     id: dep.id,
                     source: dep.dependentTableId,
                     target: dep.tableId,
-                    sourceHandle: `${TOP_SOURCE_HANDLE_ID_PREFIX}${dep.dependentTableId}`,
-                    targetHandle: `${TARGET_DEP_PREFIX}${targetDepIndexes[dep.tableId]++}_${dep.tableId}`,
+                    // sourceHandle: `${TOP_SOURCE_HANDLE_ID_PREFIX}${dep.dependentTableId}`,
+                    // targetHandle: `${TARGET_DEP_PREFIX}${targetDepIndexes[dep.tableId]++}_${dep.tableId}`,
                     type: 'dependency-edge',
                     data: { dependency: dep },
                     hidden: false,
@@ -449,7 +467,7 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
 
     return (
         <CanvasContextMenu>
-            <div className="relative flex h-full">
+            <div className="relative flex h-full w-full">
                 <ReactFlow
                     colorMode={effectiveTheme}
                     className="canvas-cursor-default nodes-animated"

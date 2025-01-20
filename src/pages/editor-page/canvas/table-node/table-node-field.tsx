@@ -31,6 +31,7 @@ export interface TableNodeFieldProps {
 export const TableNodeField: React.FC<TableNodeFieldProps> = React.memo(
     ({ field, focused, tableNodeId, highlighted, visible, isConnectable }) => {
         const { relationships, readonly } = useChartDB();
+
         const updateNodeInternals = useUpdateNodeInternals();
         const connection = useConnection();
         const isTarget = useMemo(

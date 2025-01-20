@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { EdgeType } from '../canvas';
+import type { EdgeType } from '../canvas-reduced';
 import type { RelationshipEdgeType } from '../relationship-edge';
 import { TableNodeContextMenu } from './table-node-context-menu';
 import { TableNodeDependencyIndicator } from './table-node-dependency-indicator';
@@ -25,6 +25,7 @@ import { TableNodeField } from './table-node-field';
 export type TableNodeType = Node<
     {
         table: DBTable;
+
         isOverlapping: boolean;
         highlightOverlappingTables?: boolean;
     },

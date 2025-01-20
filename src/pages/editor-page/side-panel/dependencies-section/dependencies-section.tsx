@@ -1,25 +1,31 @@
-import React, { useMemo } from 'react';
 import { Button } from '@/components/button/button';
-import { ListCollapse } from 'lucide-react';
-import { Input } from '@/components/input/input';
-import { DependencyList } from './dependency-list/dependency-list';
-import { useChartDB } from '@/hooks/use-chartdb';
 import { EmptyState } from '@/components/empty-state/empty-state';
+import { Input } from '@/components/input/input';
 import { ScrollArea } from '@/components/scroll-area/scroll-area';
-import { useTranslation } from 'react-i18next';
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
+import { useChartDB } from '@/hooks/use-chartdb';
+import { useLayout } from '@/hooks/use-layout';
 import type { DBDependency } from '@/lib/domain/db-dependency';
 import { shouldShowDependencyBySchemaFilter } from '@/lib/domain/db-dependency';
-import { useLayout } from '@/hooks/use-layout';
+import { ListCollapse } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DependencyList } from './dependency-list/dependency-list';
 
-export interface DependenciesSectionProps {}
+export interface DependenciesSectionProps {
+    dependencies: DBDependency[];
+    filteredSchemas: string[];
+}
 
-export const DependenciesSection: React.FC<DependenciesSectionProps> = () => {
-    const { dependencies, filteredSchemas, getTable } = useChartDB();
+export const DependenciesSection: React.FC<DependenciesSectionProps> = ({
+    dependencies,
+    filteredSchemas,
+}) => {
+    const { getTable } = useChartDB();
     const [filterText, setFilterText] = React.useState('');
     const { closeAllDependenciesInSidebar } = useLayout();
     const { t } = useTranslation();
