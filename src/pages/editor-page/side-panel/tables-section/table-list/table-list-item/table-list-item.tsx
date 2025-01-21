@@ -1,23 +1,25 @@
-import React from 'react';
 import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
 } from '@/components/accordion/accordion';
-import { TableListItemHeader } from './table-list-item-header/table-list-item-header';
-import { TableListItemContent } from './table-list-item-content/table-list-item-content';
+import { DBSchema } from '@/lib/domain/db-schema';
 import type { DBTable } from '@/lib/domain/db-table';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import React from 'react';
+import { TableListItemContent } from './table-list-item-content/table-list-item-content';
+import { TableListItemHeader } from './table-list-item-header/table-list-item-header';
 
 export interface TableListItemProps {
     table: DBTable;
+    schemas: DBSchema[];
 }
 
 export const TableListItem = React.forwardRef<
     React.ElementRef<typeof AccordionItem>,
     TableListItemProps
->(({ table }, ref) => {
+>(({ table, schemas }, ref) => {
     const { attributes, setNodeRef, transform, transition } = useSortable({
         id: table.id,
     });
@@ -41,7 +43,11 @@ export const TableListItem = React.forwardRef<
                     }}
                     asChild
                 >
-                    <TableListItemHeader table={table} />
+                    <TableListItemHeader
+                        table={table}
+                        schemas={schemas}
+                        filteredSchemas={[]}
+                    />
                 </AccordionTrigger>
                 <AccordionContent>
                     <TableListItemContent table={table} />

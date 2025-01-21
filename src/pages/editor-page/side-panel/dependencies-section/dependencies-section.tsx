@@ -7,10 +7,8 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import type { DBDependency } from '@/lib/domain/db-dependency';
-import { shouldShowDependencyBySchemaFilter } from '@/lib/domain/db-dependency';
 import { ListCollapse } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,48 +23,14 @@ export const DependenciesSection: React.FC<DependenciesSectionProps> = ({
     dependencies,
     filteredSchemas,
 }) => {
-    const { getTable } = useChartDB();
     const [filterText, setFilterText] = React.useState('');
     const { closeAllDependenciesInSidebar } = useLayout();
     const { t } = useTranslation();
 
     const filteredDependencies = useMemo(() => {
-        const filterName: (dependency: DBDependency) => boolean = (
-            dependency
-        ) => {
-            if (!filterText?.trim?.()) {
-                return true;
-            }
-
-            const tableName = getTable(dependency.tableId)?.name ?? '';
-            const dependentTableName =
-                getTable(dependency.dependentTableId)?.name ?? '';
-
-            return (
-                tableName.toLowerCase().includes(filterText.toLowerCase()) ||
-                dependentTableName
-                    .toLowerCase()
-                    .includes(filterText.toLowerCase())
-            );
-        };
-
-        const filterSchema: (dependency: DBDependency) => boolean = (
-            dependency
-        ) => shouldShowDependencyBySchemaFilter(dependency, filteredSchemas);
-
-        return dependencies
-            .filter(filterSchema)
-            .filter(filterName)
-            .sort((a, b) => {
-                const dependentTableA = getTable(a.dependentTableId);
-                const tableA = getTable(a.tableId);
-                const dependentTableB = getTable(b.dependentTableId);
-                const tableB = getTable(b.tableId);
-                return `${dependentTableA?.name}${tableA?.name}`.localeCompare(
-                    `${dependentTableB?.name}${tableB?.name}`
-                );
-            });
-    }, [dependencies, filterText, filteredSchemas, getTable]);
+        console.error('Not implemented: filteredDependencies');
+        return dependencies;
+    }, [dependencies, filterText, filteredSchemas]);
 
     return (
         <section className="flex flex-1 flex-col overflow-hidden px-2">

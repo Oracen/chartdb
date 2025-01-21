@@ -2,14 +2,16 @@ import { Accordion } from '@/components/accordion/accordion';
 import { useLayout } from '@/hooks/use-layout';
 import type { DBTable } from '@/lib/domain/db-table';
 
+import { DBSchema } from '@/lib/domain/db-schema';
 import React, { useCallback, useMemo } from 'react';
 import { TableListItem } from './table-list-item/table-list-item';
 
 export interface TableListProps {
     tables: DBTable[];
+    schemas: DBSchema[];
 }
 
-export const TableList: React.FC<TableListProps> = ({ tables }) => {
+export const TableList: React.FC<TableListProps> = ({ tables, schemas }) => {
     const { openTableFromSidebar, openedTableInSidebar } = useLayout();
     const lastOpenedTable = React.useRef<string | null>(null);
     const refs = useMemo(
@@ -84,6 +86,7 @@ export const TableList: React.FC<TableListProps> = ({ tables }) => {
                         key={table.id}
                         table={table}
                         ref={refs[table.id]}
+                        schemas={schemas}
                     />
                 ))}
         </Accordion>

@@ -1,7 +1,7 @@
 import React from 'react';
 
+import { examples } from '@/lib/examples-data/examples-data';
 import EditorDesktopLayoutReduced from '@/pages/editor-page/editor-desktop-layout-reduced';
-import { examples } from '@/pages/examples-page/examples-data/examples-data';
 import { ReactFlowProvider } from '@xyflow/react';
 
 export function TestPageHome() {

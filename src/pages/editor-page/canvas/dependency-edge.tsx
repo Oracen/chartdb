@@ -1,4 +1,3 @@
-import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import type { DBDependency } from '@/lib/domain/db-dependency';
 import { cn } from '@/lib/utils';
@@ -10,6 +9,7 @@ export type DependencyEdgeType = Edge<
     {
         dependency: DBDependency;
         highlighted?: boolean;
+        dependencies: DBDependency[];
     },
     'dependency-edge'
 >;
@@ -23,10 +23,10 @@ export const DependencyEdge: React.FC<EdgeProps<DependencyEdgeType>> = ({
     source,
     target,
     selected,
-    // data,
+    data,
 }) => {
     const { getInternalNode } = useReactFlow();
-    const { dependencies } = useChartDB();
+    const dependencies = data?.dependencies || [];
     const { openDependencyFromSidebar, selectSidebarSection } = useLayout();
 
     const openDependencyInEditor = useCallback(() => {

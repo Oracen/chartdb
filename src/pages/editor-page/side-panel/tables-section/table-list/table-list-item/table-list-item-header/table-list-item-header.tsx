@@ -12,9 +12,9 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import { cloneTable } from '@/lib/clone';
+import { DBSchema } from '@/lib/domain/db-schema';
 import type { DBTable } from '@/lib/domain/db-table';
 import { ListItemHeaderButton } from '@/pages/editor-page/side-panel/list-item-header-button/list-item-header-button';
 import { useReactFlow } from '@xyflow/react';
@@ -31,20 +31,15 @@ import React, { useCallback } from 'react';
 
 export interface TableListItemHeaderProps {
     table: DBTable;
+    schemas: DBSchema[];
+    filteredSchemas: string[];
 }
 
 export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
     table,
+    schemas,
+    filteredSchemas,
 }) => {
-    const {
-        removeTable,
-        createIndex,
-        createField,
-        createTable,
-        schemas,
-        filteredSchemas,
-    } = useChartDB();
-
     const { fitView, setNodes } = useReactFlow();
     const { hideSidePanel } = useLayout();
 
@@ -79,8 +74,8 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
     );
 
     const deleteTableHandler = useCallback(() => {
-        removeTable(table.id);
-    }, [table.id, removeTable]);
+        console.error('Not implemented: deleteTable');
+    }, [table.id]);
 
     const duplicateTableHandler = useCallback(
         (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -91,9 +86,9 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
             clonedTable.x += 30;
             clonedTable.y += 50;
 
-            createTable(clonedTable);
+            console.error('Not implemented: createTable');
         },
-        [createTable, table]
+        [table]
     );
 
     const renderDropDownMenu = useCallback(
@@ -129,7 +124,7 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
                             className="flex justify-between gap-4"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                createField(table.id);
+                                console.error('Not implemented: createField');
                             }}
                         >
                             Add Field
@@ -139,7 +134,7 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
                             className="flex justify-between gap-4"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                createIndex(table.id);
+                                console.error('Not implemented: createIndex');
                             }}
                         >
                             Add Index
@@ -169,15 +164,7 @@ export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
                 </DropdownMenuContent>
             </DropdownMenu>
         ),
-        [
-            table.id,
-            createField,
-            createIndex,
-            deleteTableHandler,
-            duplicateTableHandler,
-
-            schemas.length,
-        ]
+        [table.id, deleteTableHandler, duplicateTableHandler, schemas.length]
     );
 
     let schemaToDisplay;

@@ -23,6 +23,7 @@ export const EditorDesktopLayout: React.FC<EditorDesktopLayoutProps> = ({
                 initialDependencies={initialDependencies}
             />
             <SidePanel
+                schemas={[]}
                 initialFilteredSchemas={[]}
                 initialTables={initialTables}
                 initialRelationships={initialRelationships}

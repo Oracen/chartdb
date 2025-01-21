@@ -1,11 +1,11 @@
+import BikeStoresExample from '@/assets/examples/bike_stores_example.png';
+import BikeStoresExampleDark from '@/assets/examples/bike_stores_example_dark.png';
+import DVDRentalExample from '@/assets/examples/dvd_rental_example.png';
+import DVDRentalExampleDark from '@/assets/examples/dvd_rental_example_dark.png';
+import EmployeeExample from '@/assets/examples/employees_example.png';
+import EmployeeExampleDark from '@/assets/examples/employees_example_dark.png';
 import { DatabaseType } from '@/lib/domain/database-type';
 import type { Diagram } from '@/lib/domain/diagram';
-import BikeStoresExample from '../../../assets/examples/bike_stores_example.png';
-import BikeStoresExampleDark from '../../../assets/examples/bike_stores_example_dark.png';
-import DVDRentalExample from '../../../assets/examples/dvd_rental_example.png';
-import DVDRentalExampleDark from '../../../assets/examples/dvd_rental_example_dark.png';
-import EmployeeExample from '../../../assets/examples/employees_example.png';
-import EmployeeExampleDark from '../../../assets/examples/employees_example_dark.png';
 
 export interface Example {
     id: string;

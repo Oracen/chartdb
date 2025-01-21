@@ -9,10 +9,10 @@ import {
     SelectValue,
 } from '@/components/select/select';
 import type { SidebarSection } from '@/context/layout-context/layout-context';
-import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import { DBDependency } from '@/lib/domain/db-dependency';
 import { DBRelationship } from '@/lib/domain/db-relationship';
+import { DBSchema } from '@/lib/domain/db-schema';
 import { DBTable } from '@/lib/domain/db-table';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,7 @@ import { RelationshipsSection } from './relationships-section/relationships-sect
 import { TablesSection } from './tables-section/tables-section';
 
 export interface SidePanelProps {
+    schemas: DBSchema[];
     initialTables: DBTable[];
     initialRelationships: DBRelationship[];
     initialDependencies: DBDependency[];
@@ -28,13 +29,13 @@ export interface SidePanelProps {
 }
 
 export const SidePanel: React.FC<SidePanelProps> = ({
+    schemas,
     initialTables,
     initialRelationships,
     initialDependencies,
     initialFilteredSchemas,
 }) => {
     const { t } = useTranslation();
-    const { filterSchemas } = useChartDB();
     const {
         selectSidebarSection,
         selectedSidebarSection,
@@ -71,8 +72,10 @@ export const SidePanel: React.FC<SidePanelProps> = ({
                             deselectAll
                             options={schemasOptions}
                             value={filteredSchemas ?? []}
-                            onChange={(values) => {
-                                filterSchemas(values as string[]);
+                            onChange={() => {
+                                console.error(
+                                    'Not implemented: filter by schema'
+                                );
                             }}
                             placeholder={t('side_panel.filter_by_schema')}
                             inputPlaceholder={t('side_panel.search_schema')}
@@ -119,6 +122,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
             </div>
             {selectedSidebarSection === 'tables' ? (
                 <TablesSection
+                    schemas={schemas}
                     tables={initialTables}
                     filteredSchemas={initialFilteredSchemas}
                 />

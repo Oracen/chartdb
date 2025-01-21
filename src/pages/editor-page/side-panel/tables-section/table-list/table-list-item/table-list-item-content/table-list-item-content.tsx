@@ -6,8 +6,6 @@ import {
 } from '@/components/accordion/accordion';
 import { Button } from '@/components/button/button';
 import { Textarea } from '@/components/textarea/textarea';
-import { useChartDB } from '@/hooks/use-chartdb';
-import type { DBField } from '@/lib/domain/db-field';
 import type { DBTable } from '@/lib/domain/db-table';
 import type { DragEndEvent } from '@dnd-kit/core';
 import {
@@ -18,7 +16,6 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import {
-    arrayMove,
     SortableContext,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
@@ -36,7 +33,6 @@ export interface TableListItemContentProps {
 export const TableListItemContent: React.FC<TableListItemContentProps> = ({
     table,
 }) => {
-    const { updateField, removeField, createField, updateTable } = useChartDB();
     const { t } = useTranslation();
     const { color } = table;
     const [selectedItems, setSelectedItems] = React.useState<
@@ -48,13 +44,7 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
         const { active, over } = event;
 
         if (active?.id !== over?.id && !!over && !!active) {
-            const items = table.fields;
-            const oldIndex = items.findIndex((item) => item.id === active.id);
-            const newIndex = items.findIndex((item) => item.id === over.id);
-
-            updateTable(table.id, {
-                fields: arrayMove(items, oldIndex, newIndex),
-            });
+            console.error('Not implemented: updateTable');
         }
     };
 
@@ -91,7 +81,9 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                                         className="size-4 p-0 text-xs hover:bg-primary-foreground"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            createField(table.id);
+                                            console.error(
+                                                'Not implemented: createField'
+                                            );
                                         }}
                                     >
                                         <Plus className="size-4 shrink-0 text-muted-foreground transition-transform duration-200" />
@@ -114,17 +106,15 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                                     <TableField
                                         key={field.id}
                                         field={field}
-                                        updateField={(
-                                            attrs: Partial<DBField>
-                                        ) =>
-                                            updateField(
-                                                table.id,
-                                                field.id,
-                                                attrs
+                                        updateField={() =>
+                                            console.error(
+                                                'Not implemented: updateField'
                                             )
                                         }
                                         removeField={() =>
-                                            removeField(table.id, field.id)
+                                            console.error(
+                                                'Not implemented: removeField'
+                                            )
                                         }
                                     />
                                 ))}
@@ -149,10 +139,8 @@ export const TableListItemContent: React.FC<TableListItemContentProps> = ({
                     <AccordionContent className="pb-0 pt-1">
                         <Textarea
                             value={table.comments}
-                            onChange={(e) =>
-                                updateTable(table.id, {
-                                    comments: e.target.value,
-                                })
+                            onChange={() =>
+                                console.error('Not implemented: updateTable')
                             }
                             placeholder={t(
                                 'side_panel.tables_section.table.no_comments'

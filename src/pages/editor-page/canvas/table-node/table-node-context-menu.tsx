@@ -4,9 +4,7 @@ import {
     ContextMenuItem,
     ContextMenuTrigger,
 } from '@/components/context-menu/context-menu';
-import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
-import { cloneTable } from '@/lib/clone';
 import type { DBTable } from '@/lib/domain/db-table';
 import { Copy, Pencil, Trash2 } from 'lucide-react';
 import React, { useCallback } from 'react';
@@ -14,32 +12,26 @@ import { useTranslation } from 'react-i18next';
 
 export interface TableNodeContextMenuProps {
     table: DBTable;
+    readonly: boolean;
 }
 
 export const TableNodeContextMenu: React.FC<
     React.PropsWithChildren<TableNodeContextMenuProps>
-> = ({ children, table }) => {
-    const { removeTable, readonly, createTable } = useChartDB();
+> = ({ children, table, readonly }) => {
     const { openTableFromSidebar } = useLayout();
     const { t } = useTranslation();
 
     const duplicateTableHandler = useCallback(() => {
-        const clonedTable = cloneTable(table);
-
-        clonedTable.name = `${clonedTable.name}_copy`;
-        clonedTable.x += 30;
-        clonedTable.y += 50;
-
-        createTable(clonedTable);
-    }, [createTable, table]);
+        console.error('Not implemented: createTable');
+    }, [table]);
 
     const editTableHandler = useCallback(() => {
         openTableFromSidebar(table.id);
     }, [openTableFromSidebar, table.id]);
 
     const removeTableHandler = useCallback(() => {
-        removeTable(table.id);
-    }, [removeTable, table.id]);
+        console.error('Not implemented: removeTable');
+    }, [table.id]);
 
     if (readonly) {
         return <>{children}</>;

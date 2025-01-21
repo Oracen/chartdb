@@ -1,4 +1,4 @@
-import { useChartDB } from '@/hooks/use-chartdb';
+import { DBDependency } from '@/lib/domain/db-dependency';
 import type { DBTable } from '@/lib/domain/db-table';
 import {
     Handle,
@@ -15,11 +15,11 @@ export const TARGET_DEP_PREFIX = 'target_dep_';
 export interface TableNodeDependencyIndicatorProps {
     table: DBTable;
     focused: boolean;
+    dependencies: DBDependency[];
 }
 
 export const TableNodeDependencyIndicator: React.FC<TableNodeDependencyIndicatorProps> =
-    React.memo(({ table, focused }) => {
-        const { dependencies } = useChartDB();
+    React.memo(({ table, focused, dependencies }) => {
         const updateNodeInternals = useUpdateNodeInternals();
         const connection = useConnection();
 

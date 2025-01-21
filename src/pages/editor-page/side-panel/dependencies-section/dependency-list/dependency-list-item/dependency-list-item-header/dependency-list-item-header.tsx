@@ -7,9 +7,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/dropdown-menu/dropdown-menu';
-import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import type { DBDependency } from '@/lib/domain/db-dependency';
+import { DBTable } from '@/lib/domain/db-table';
 import { useReactFlow } from '@xyflow/react';
 import { CircleDotDashed, EllipsisVertical, Trash2 } from 'lucide-react';
 import React, { useCallback, useMemo } from 'react';
@@ -18,27 +18,25 @@ import { ListItemHeaderButton } from '../../../../list-item-header-button/list-i
 
 export interface DependencyListItemHeaderProps {
     dependency: DBDependency;
+    table: DBTable;
+    dependentTable: DBTable;
 }
 
 export const DependencyListItemHeader: React.FC<
     DependencyListItemHeaderProps
-> = ({ dependency }) => {
-    const { removeDependency, getTable } = useChartDB();
+> = ({ dependency, table, dependentTable }) => {
     const { fitView, deleteElements, setEdges } = useReactFlow();
     const { t } = useTranslation();
     const { hideSidePanel } = useLayout();
 
     const dependencyName = useMemo(() => {
-        const table = getTable(dependency.tableId);
-        const dependentTable = getTable(dependency.dependentTableId);
-
         // should not happen
         if (!table || !dependentTable) {
             return '';
         }
 
         return `${dependentTable.name} -> ${table.name}`;
-    }, [dependency.tableId, dependency.dependentTableId, getTable]);
+    }, [dependency.tableId, dependency.dependentTableId]);
 
     const focusOnDependency = useCallback(
         (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -82,11 +80,12 @@ export const DependencyListItemHeader: React.FC<
     );
 
     const deleteDependencyHandler = useCallback(() => {
-        removeDependency(dependency.id);
+        console.error('Not implemented: removeDependency');
+
         deleteElements({
             edges: [{ id: dependency.id }],
         });
-    }, [dependency.id, removeDependency, deleteElements]);
+    }, [dependency.id, deleteElements]);
 
     const renderDropDownMenu = useCallback(
         () => (

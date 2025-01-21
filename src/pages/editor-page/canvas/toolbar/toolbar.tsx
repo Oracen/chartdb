@@ -6,7 +6,6 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useChartDB } from '@/hooks/use-chartdb';
 
 import { useOnViewportChange, useReactFlow } from '@xyflow/react';
 import { Save, Scan, ZoomIn, ZoomOut } from 'lucide-react';
@@ -21,7 +20,6 @@ export interface ToolbarProps {
 }
 
 export const Toolbar: React.FC<ToolbarProps> = ({ readonly }) => {
-    const { updateDiagramUpdatedAt } = useChartDB();
     const { t } = useTranslation();
     const { getZoom, zoomIn, zoomOut, fitView } = useReactFlow();
     const [zoom, setZoom] = useState<string>(convertToPercentage(getZoom()));
@@ -66,7 +64,11 @@ export const Toolbar: React.FC<ToolbarProps> = ({ readonly }) => {
                                 <TooltipTrigger asChild>
                                     <span>
                                         <ToolbarButton
-                                            onClick={updateDiagramUpdatedAt}
+                                            onClick={() =>
+                                                console.error(
+                                                    'Not implemented: Save'
+                                                )
+                                            }
                                         >
                                             <Save />
                                         </ToolbarButton>

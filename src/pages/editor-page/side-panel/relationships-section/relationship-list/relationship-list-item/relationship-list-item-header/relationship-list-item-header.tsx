@@ -8,7 +8,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/dropdown-menu/dropdown-menu';
 import { Input } from '@/components/input/input';
-import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
 import type { DBRelationship } from '@/lib/domain/db-relationship';
 import { useReactFlow } from '@xyflow/react';
@@ -32,7 +31,6 @@ export interface RelationshipListItemHeaderProps {
 export const RelationshipListItemHeader: React.FC<
     RelationshipListItemHeaderProps
 > = ({ relationship }) => {
-    const { updateRelationship, removeRelationship } = useChartDB();
     const { fitView, deleteElements, setEdges } = useReactFlow();
     const { t } = useTranslation();
     const { hideSidePanel } = useLayout();
@@ -45,19 +43,11 @@ export const RelationshipListItemHeader: React.FC<
     const editRelationshipName = useCallback(() => {
         if (!editMode) return;
         if (relationshipName.trim() && relationshipName !== relationship.name) {
-            updateRelationship(relationship.id, {
-                name: relationshipName.trim(),
-            });
+            console.error('Not implemented: updateRelationship');
         }
 
         setEditMode(false);
-    }, [
-        relationshipName,
-        relationship.id,
-        updateRelationship,
-        editMode,
-        relationship.name,
-    ]);
+    }, [relationshipName, relationship.id, editMode, relationship.name]);
 
     useClickAway(inputRef, editRelationshipName);
     useKeyPressEvent('Enter', editRelationshipName);
@@ -110,11 +100,12 @@ export const RelationshipListItemHeader: React.FC<
     );
 
     const deleteRelationshipHandler = useCallback(() => {
-        removeRelationship(relationship.id);
+        console.error('Not implemented: removeRelationship');
+
         deleteElements({
             edges: [{ id: relationship.id }],
         });
-    }, [relationship.id, removeRelationship, deleteElements]);
+    }, [relationship.id, deleteElements]);
 
     const renderDropDownMenu = useCallback(
         () => (

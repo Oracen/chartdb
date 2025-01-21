@@ -1,16 +1,16 @@
-import React, { useCallback, useMemo } from 'react';
+import { useLayout } from '@/hooks/use-layout';
+import type { DBRelationship } from '@/lib/domain/db-relationship';
+import { cn } from '@/lib/utils';
 import type { Edge, EdgeProps } from '@xyflow/react';
 import { getSmoothStepPath, Position, useReactFlow } from '@xyflow/react';
-import type { DBRelationship } from '@/lib/domain/db-relationship';
-import { RIGHT_HANDLE_ID_PREFIX } from './table-node/table-node-field';
-import { useChartDB } from '@/hooks/use-chartdb';
-import { useLayout } from '@/hooks/use-layout';
-import { cn } from '@/lib/utils';
+import React, { useCallback, useMemo } from 'react';
 import { getCardinalityMarkerId } from './canvas-utils';
+import { RIGHT_HANDLE_ID_PREFIX } from './table-node/table-node-field';
 
 export type RelationshipEdgeType = Edge<
     {
         relationship: DBRelationship;
+        relationships: DBRelationship[];
         highlighted?: boolean;
     },
     'relationship-edge'
@@ -30,8 +30,7 @@ export const RelationshipEdge: React.FC<EdgeProps<RelationshipEdgeType>> = ({
     const { getInternalNode, getEdge } = useReactFlow();
     const { openRelationshipFromSidebar, selectSidebarSection } = useLayout();
 
-    const { relationships } = useChartDB();
-
+    const relationships = data?.relationships || [];
     const relationship = data?.relationship;
 
     const openRelationshipInEditor = useCallback(() => {

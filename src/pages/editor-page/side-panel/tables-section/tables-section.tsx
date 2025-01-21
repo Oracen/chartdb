@@ -12,16 +12,19 @@ import {
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
 import { useLayout } from '@/hooks/use-layout';
+import { DBSchema } from '@/lib/domain/db-schema';
 import type { DBTable } from '@/lib/domain/db-table';
 import { shouldShowTablesBySchemaFilter } from '@/lib/domain/db-table';
 
 export interface TablesSectionProps {
     tables: DBTable[];
+    schemas: DBSchema[];
     filteredSchemas: string[];
 }
 
 export const TablesSection: React.FC<TablesSectionProps> = ({
     tables,
+    schemas,
     filteredSchemas,
 }) => {
     const { closeAllTablesInSidebar } = useLayout();
@@ -79,7 +82,7 @@ export const TablesSection: React.FC<TablesSectionProps> = ({
                             className="mt-20"
                         />
                     ) : (
-                        <TableList tables={filteredTables} />
+                        <TableList tables={filteredTables} schemas={schemas} />
                     )}
                 </ScrollArea>
             </div>

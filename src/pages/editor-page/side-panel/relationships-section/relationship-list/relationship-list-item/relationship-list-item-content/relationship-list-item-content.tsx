@@ -12,34 +12,31 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useChartDB } from '@/hooks/use-chartdb';
-import type {
-    DBRelationship,
-    RelationshipType,
-} from '@/lib/domain/db-relationship';
-import {
-    determineCardinalities,
-    determineRelationshipType,
-} from '@/lib/domain/db-relationship';
+import { DBField } from '@/lib/domain/db-field';
+import type { DBRelationship } from '@/lib/domain/db-relationship';
+import { determineRelationshipType } from '@/lib/domain/db-relationship';
+import { DBTable } from '@/lib/domain/db-table';
 import { useReactFlow } from '@xyflow/react';
 import {
+    ChevronsLeftRightEllipsis,
     FileMinus2,
     FileOutput,
     Trash2,
-    ChevronsLeftRightEllipsis,
 } from 'lucide-react';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface RelationshipListItemContentProps {
     relationship: DBRelationship;
+    sourceTable: DBTable;
+    sourceField: DBField;
+    targetTable: DBTable;
+    targetField: DBField;
 }
 
 export const RelationshipListItemContent: React.FC<
     RelationshipListItemContentProps
-> = ({ relationship }) => {
-    const { getTable, getField, updateRelationship, removeRelationship } =
-        useChartDB();
+> = ({ relationship, sourceTable, sourceField, targetTable, targetField }) => {
     const { deleteElements } = useReactFlow();
     const { t } = useTranslation();
     const relationshipType = useMemo(
@@ -51,36 +48,17 @@ export const RelationshipListItemContent: React.FC<
         [relationship.sourceCardinality, relationship.targetCardinality]
     );
 
-    const updateCardinalities = useCallback(
-        (type: RelationshipType) => {
-            const { sourceCardinality, targetCardinality } =
-                determineCardinalities(type);
-            updateRelationship(relationship.id, {
-                sourceCardinality,
-                targetCardinality,
-            });
-        },
-        [relationship.id, updateRelationship]
-    );
-
-    const targetTable = getTable(relationship.targetTableId);
-    const targetField = getField(
-        relationship.targetTableId,
-        relationship.targetFieldId
-    );
-
-    const sourceTable = getTable(relationship.sourceTableId);
-    const sourceField = getField(
-        relationship.sourceTableId,
-        relationship.sourceFieldId
-    );
+    const updateCardinalities = useCallback(() => {
+        console.error('Not implemented: updateTable');
+    }, [relationship.id]);
 
     const deleteRelationshipHandler = useCallback(() => {
-        removeRelationship(relationship.id);
+        console.error('Not implemented: removeRelationship');
+
         deleteElements({
             edges: [{ id: relationship.id }],
         });
-    }, [relationship.id, removeRelationship, deleteElements]);
+    }, [relationship.id, deleteElements]);
 
     return (
         <div className="my-1 flex flex-col rounded-b-md px-1">

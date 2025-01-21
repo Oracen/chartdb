@@ -4,8 +4,8 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useChartDB } from '@/hooks/use-chartdb';
 import type { DBDependency } from '@/lib/domain/db-dependency';
+import { DBTable } from '@/lib/domain/db-table';
 import { useReactFlow } from '@xyflow/react';
 import { FileMinus2, FileOutput, Trash2 } from 'lucide-react';
 import React, { useCallback } from 'react';
@@ -13,24 +13,23 @@ import { useTranslation } from 'react-i18next';
 
 export interface DependencyListItemContentProps {
     dependency: DBDependency;
+    table: DBTable;
+    dependentTable: DBTable;
 }
 
 export const DependencyListItemContent: React.FC<
     DependencyListItemContentProps
-> = ({ dependency }) => {
-    const { getTable, removeDependency } = useChartDB();
+> = ({ dependency, table, dependentTable }) => {
     const { deleteElements } = useReactFlow();
     const { t } = useTranslation();
 
-    const table = getTable(dependency.tableId);
-    const dependentTable = getTable(dependency.dependentTableId);
-
     const deleteDependencyHandler = useCallback(() => {
-        removeDependency(dependency.id);
+        console.error('Not implemented: removeDependency');
+
         deleteElements({
             edges: [{ id: dependency.id }],
         });
-    }, [dependency.id, removeDependency, deleteElements]);
+    }, [dependency.id, deleteElements]);
 
     return (
         <div className="my-1 flex flex-col rounded-b-md px-1">

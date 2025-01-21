@@ -43,7 +43,6 @@ import React, {
     useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CanvasContextMenu } from './canvas-context-menu';
 import { findOverlappingTables, findTableOverlapping } from './canvas-utils';
 import type { DependencyEdgeType } from './dependency-edge';
 import { DependencyEdge } from './dependency-edge';
@@ -76,6 +75,8 @@ const effectiveTheme = 'light';
 const tableToTableNode = (
     table: DBTable,
     relationships: DBRelationship[],
+    dependencies: DBDependency[],
+    readonly: boolean,
     filteredSchemas?: string[]
 ): TableNodeType => ({
     id: table.id,
@@ -84,7 +85,9 @@ const tableToTableNode = (
     data: {
         table,
         isOverlapping: false,
-        relationships: relationships,
+        relationships,
+        dependencies,
+        readonly,
     },
     width: table.width ?? MIN_TABLE_SIZE,
     hidden: !shouldShowTablesBySchemaFilter(table, filteredSchemas),
@@ -129,7 +132,13 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
 
     const [nodes, setNodes, onNodesChange] = useNodesState<TableNodeType>(
         initialTables.map((table) =>
-            tableToTableNode(table, relationships, filteredSchemas)
+            tableToTableNode(
+                table,
+                relationships,
+                dependencies,
+                readonly || true,
+                filteredSchemas
+            )
         )
     );
     const [edges, setEdges, onEdgesChange] =
@@ -143,7 +152,13 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
 
     useEffect(() => {
         const initialNodes = initialTables.map((table) =>
-            tableToTableNode(table, relationships, filteredSchemas)
+            tableToTableNode(
+                table,
+                relationships,
+                dependencies,
+                readonly || true,
+                filteredSchemas
+            )
         );
         if (equal(initialNodes, nodes)) {
             setIsInitialLoadingNodes(false);
@@ -190,7 +205,7 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                     sourceHandle: `${LEFT_HANDLE_ID_PREFIX}${relationship.sourceFieldId}`,
                     targetHandle: `${TARGET_ID_PREFIX}${targetIndexes[`${relationship.targetTableId}${relationship.targetFieldId}`]++}_${relationship.targetFieldId}`,
                     type: 'relationship-edge',
-                    data: { relationship },
+                    data: { relationship, relationships },
                 })
             ),
             ...dependencies.map(
@@ -201,7 +216,7 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                     sourceHandle: `${TOP_SOURCE_HANDLE_ID_PREFIX}${dep.dependentTableId}`,
                     targetHandle: `${TARGET_DEP_PREFIX}${targetDepIndexes[dep.tableId]++}_${dep.tableId}`,
                     type: 'dependency-edge',
-                    data: { dependency: dep },
+                    data: { dependency: dep, dependencies },
                     hidden: false,
                 })
             ),
@@ -285,6 +300,8 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                 const node = tableToTableNode(
                     table,
                     relationships,
+                    dependencies,
+                    readonly || true,
                     filteredSchemas
                 );
                 return {
@@ -442,164 +459,160 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
     const operatingSystem = getOperatingSystem();
 
     return (
-        <CanvasContextMenu>
-            <div className="relative flex h-full w-full">
-                <ReactFlow
-                    colorMode={effectiveTheme}
-                    className="canvas-cursor-default nodes-animated"
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChangeHandler}
-                    onEdgesChange={onEdgesChangeHandler}
-                    maxZoom={5}
-                    minZoom={0.1}
-                    onConnect={() => {}}
-                    proOptions={{
-                        hideAttribution: true,
-                    }}
-                    fitView={false}
-                    nodeTypes={nodeTypes}
-                    edgeTypes={edgeTypes}
-                    defaultEdgeOptions={{
-                        animated: false,
-                        type: 'relationship-edge',
-                    }}
-                    panOnScroll={true}
-                    snapToGrid={shiftPressed || snapToGridEnabled}
-                    snapGrid={[20, 20]}
+        <div className="relative flex h-full w-full">
+            <ReactFlow
+                colorMode={effectiveTheme}
+                className="canvas-cursor-default nodes-animated"
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChangeHandler}
+                onEdgesChange={onEdgesChangeHandler}
+                maxZoom={5}
+                minZoom={0.1}
+                onConnect={() => {}}
+                proOptions={{
+                    hideAttribution: true,
+                }}
+                fitView={false}
+                nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
+                defaultEdgeOptions={{
+                    animated: false,
+                    type: 'relationship-edge',
+                }}
+                panOnScroll={true}
+                snapToGrid={shiftPressed || snapToGridEnabled}
+                snapGrid={[20, 20]}
+            >
+                <Controls
+                    position="top-left"
+                    showZoom={false}
+                    showFitView={false}
+                    showInteractive={false}
+                    className="!shadow-none"
                 >
-                    <Controls
-                        position="top-left"
-                        showZoom={false}
-                        showFitView={false}
-                        showInteractive={false}
-                        className="!shadow-none"
-                    >
-                        <div className="flex flex-col items-center gap-2 md:flex-row">
-                            {!readonly ? (
-                                <>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <span>
-                                                <Button
-                                                    variant="secondary"
-                                                    className="size-8 p-1 shadow-none"
-                                                    onClick={reorderTables}
-                                                >
-                                                    <LayoutGrid className="size-4" />
-                                                </Button>
-                                            </span>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            {t('toolbar.reorder_diagram')}
-                                        </TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <span>
-                                                <Button
-                                                    variant="secondary"
-                                                    className={cn(
-                                                        'size-8 p-1 shadow-none',
-                                                        snapToGridEnabled ||
-                                                            shiftPressed
-                                                            ? 'bg-pink-600 text-white hover:bg-pink-500 dark:hover:bg-pink-700 hover:text-white'
-                                                            : ''
-                                                    )}
-                                                    onClick={() =>
-                                                        setSnapToGridEnabled(
-                                                            (prev) => !prev
-                                                        )
-                                                    }
-                                                >
-                                                    <Magnet className="size-4" />
-                                                </Button>
-                                            </span>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            {t('snap_to_grid_tooltip', {
-                                                key:
-                                                    operatingSystem === 'mac'
-                                                        ? '⇧'
-                                                        : 'Shift',
-                                            })}
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </>
-                            ) : null}
-
-                            <div
-                                className={`transition-opacity duration-300 ease-in-out ${
-                                    hasOverlappingTables
-                                        ? 'opacity-100'
-                                        : 'opacity-0'
-                                }`}
-                            >
+                    <div className="flex flex-col items-center gap-2 md:flex-row">
+                        {!readonly ? (
+                            <>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <span>
                                             <Button
-                                                variant="default"
+                                                variant="secondary"
                                                 className="size-8 p-1 shadow-none"
-                                                onClick={pulseOverlappingTables}
+                                                onClick={reorderTables}
                                             >
-                                                <AlertTriangle className="size-4 text-white" />
+                                                <LayoutGrid className="size-4" />
                                             </Button>
                                         </span>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                        {t(
-                                            'toolbar.highlight_overlapping_tables'
-                                        )}
+                                        {t('toolbar.reorder_diagram')}
                                     </TooltipContent>
                                 </Tooltip>
-                            </div>
-                        </div>
-                    </Controls>
-                    {isLoadingDOM ? (
-                        <Controls
-                            position="top-center"
-                            orientation="horizontal"
-                            showZoom={false}
-                            showFitView={false}
-                            showInteractive={false}
-                            className="!shadow-none"
-                        >
-                            <Badge
-                                variant="default"
-                                className="bg-pink-600 text-white"
-                            >
-                                {t('loading_diagram')}
-                            </Badge>
-                        </Controls>
-                    ) : null}
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <span>
+                                            <Button
+                                                variant="secondary"
+                                                className={cn(
+                                                    'size-8 p-1 shadow-none',
+                                                    snapToGridEnabled ||
+                                                        shiftPressed
+                                                        ? 'bg-pink-600 text-white hover:bg-pink-500 dark:hover:bg-pink-700 hover:text-white'
+                                                        : ''
+                                                )}
+                                                onClick={() =>
+                                                    setSnapToGridEnabled(
+                                                        (prev) => !prev
+                                                    )
+                                                }
+                                            >
+                                                <Magnet className="size-4" />
+                                            </Button>
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        {t('snap_to_grid_tooltip', {
+                                            key:
+                                                operatingSystem === 'mac'
+                                                    ? '⇧'
+                                                    : 'Shift',
+                                        })}
+                                    </TooltipContent>
+                                </Tooltip>
+                            </>
+                        ) : null}
 
+                        <div
+                            className={`transition-opacity duration-300 ease-in-out ${
+                                hasOverlappingTables
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                            }`}
+                        >
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <span>
+                                        <Button
+                                            variant="default"
+                                            className="size-8 p-1 shadow-none"
+                                            onClick={pulseOverlappingTables}
+                                        >
+                                            <AlertTriangle className="size-4 text-white" />
+                                        </Button>
+                                    </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    {t('toolbar.highlight_overlapping_tables')}
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
+                    </div>
+                </Controls>
+                {isLoadingDOM ? (
                     <Controls
-                        position={'bottom-center'}
+                        position="top-center"
                         orientation="horizontal"
                         showZoom={false}
                         showFitView={false}
                         showInteractive={false}
                         className="!shadow-none"
                     >
-                        <Toolbar readonly={readonly} />
+                        <Badge
+                            variant="default"
+                            className="bg-pink-600 text-white"
+                        >
+                            {t('loading_diagram')}
+                        </Badge>
                     </Controls>
-                    {showMiniMapOnCanvas && (
-                        <MiniMap
-                            style={{
-                                width: 100,
-                                height: 100,
-                            }}
-                        />
-                    )}
-                    <Background
-                        variant={BackgroundVariant.Dots}
-                        gap={16}
-                        size={1}
+                ) : null}
+
+                <Controls
+                    position={'bottom-center'}
+                    orientation="horizontal"
+                    showZoom={false}
+                    showFitView={false}
+                    showInteractive={false}
+                    className="!shadow-none"
+                >
+                    <Toolbar readonly={readonly} />
+                </Controls>
+                {showMiniMapOnCanvas && (
+                    <MiniMap
+                        style={{
+                            width: 100,
+                            height: 100,
+                        }}
                     />
-                </ReactFlow>
-                <MarkerDefinitions />
-            </div>
-        </CanvasContextMenu>
+                )}
+                <Background
+                    variant={BackgroundVariant.Dots}
+                    gap={16}
+                    size={1}
+                />
+            </ReactFlow>
+            <MarkerDefinitions />
+        </div>
     );
 };

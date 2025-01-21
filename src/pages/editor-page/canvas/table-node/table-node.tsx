@@ -1,7 +1,7 @@
 import { Button } from '@/components/button/button';
 import { Label } from '@/components/label/label';
-import { useChartDB } from '@/hooks/use-chartdb';
 import { useLayout } from '@/hooks/use-layout';
+import { DBDependency } from '@/lib/domain/db-dependency';
 import type { DBField } from '@/lib/domain/db-field';
 import { DBRelationship } from '@/lib/domain/db-relationship';
 import type { DBTable } from '@/lib/domain/db-table';
@@ -30,6 +30,9 @@ export type TableNodeType = Node<
         isOverlapping: boolean;
         highlightOverlappingTables?: boolean;
         relationships: DBRelationship[];
+        dependencies: DBDependency[];
+
+        readonly: boolean;
     },
     'table'
 >;
@@ -49,9 +52,10 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
             isOverlapping,
             highlightOverlappingTables,
             relationships,
+            dependencies,
+            readonly,
         },
     }) => {
-        const { updateTable } = useChartDB();
         const edges = useStore((store) => store.edges) as EdgeType[];
         const { openTableFromSidebar, selectSidebarSection } = useLayout();
         const [expanded, setExpanded] = useState(false);
@@ -72,19 +76,12 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
         };
 
         const expandTable = useCallback(() => {
-            updateTable(table.id, {
-                width:
-                    (table.width ?? MIN_TABLE_SIZE) < MID_TABLE_SIZE
-                        ? MID_TABLE_SIZE
-                        : MAX_TABLE_SIZE,
-            });
-        }, [table.id, table.width, updateTable]);
+            console.error('Not implemented: updateTable');
+        }, [table.id, table.width]);
 
         const shrinkTable = useCallback(() => {
-            updateTable(table.id, {
-                width: MIN_TABLE_SIZE,
-            });
-        }, [table.id, updateTable]);
+            console.error('Not implemented: updateTable');
+        }, [table.id]);
 
         const toggleExpand = () => {
             setExpanded(!expanded);
@@ -133,7 +130,7 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
         }, [expanded, table.fields, isMustDisplayedField]);
 
         return (
-            <TableNodeContextMenu table={table}>
+            <TableNodeContextMenu table={table} readonly={readonly}>
                 <div
                     className={cn(
                         'flex w-full flex-col border-2 bg-slate-50 dark:bg-slate-950 rounded-lg shadow-sm transition-transform duration-300',
@@ -167,6 +164,7 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
                     <TableNodeDependencyIndicator
                         table={table}
                         focused={focused}
+                        dependencies={dependencies}
                     />
                     <div
                         className="h-2 rounded-t-[6px]"
