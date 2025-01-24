@@ -12,7 +12,6 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useLayout } from '@/hooks/use-layout';
 import { cloneTable } from '@/lib/clone';
 import { DBSchema } from '@/lib/domain/db-schema';
 import type { DBTable } from '@/lib/domain/db-table';
@@ -33,15 +32,16 @@ export interface TableListItemHeaderProps {
     table: DBTable;
     schemas: DBSchema[];
     filteredSchemas: string[];
+    hideSidePanel: () => void;
 }
 
 export const TableListItemHeader: React.FC<TableListItemHeaderProps> = ({
     table,
     schemas,
     filteredSchemas,
+    hideSidePanel,
 }) => {
     const { fitView, setNodes } = useReactFlow();
-    const { hideSidePanel } = useLayout();
 
     const focusOnTable = useCallback(
         (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

@@ -9,7 +9,6 @@ import {
     SelectValue,
 } from '@/components/select/select';
 import type { SidebarSection } from '@/context/layout-context/layout-context';
-import { useLayout } from '@/hooks/use-layout';
 import { DBDependency } from '@/lib/domain/db-dependency';
 import { DBRelationship } from '@/lib/domain/db-relationship';
 import { DBSchema } from '@/lib/domain/db-schema';
@@ -26,6 +25,8 @@ export interface SidePanelProps {
     initialRelationships: DBRelationship[];
     initialDependencies: DBDependency[];
     initialFilteredSchemas: string[];
+    selectedSidebarSection: SidebarSection;
+    setSelectedSidebarSection: (section: SidebarSection) => void;
 }
 
 export const SidePanel: React.FC<SidePanelProps> = ({
@@ -34,25 +35,21 @@ export const SidePanel: React.FC<SidePanelProps> = ({
     initialRelationships,
     initialDependencies,
     initialFilteredSchemas,
+    selectedSidebarSection,
+    setSelectedSidebarSection,
 }) => {
     const { t } = useTranslation();
-    const {
-        selectSidebarSection,
-        selectedSidebarSection,
-        isSelectSchemaOpen,
-        openSelectSchema,
-        closeSelectSchema,
-    } = useLayout();
+
+    const [isSelectSchemaOpen, setInnerIsSelectSchemaOpen] =
+        React.useState(false);
+
+    const [openTable, setOpenTable] = React.useState<string | null>(null);
 
     const setIsSelectSchemaOpen = useCallback(
         (open: boolean) => {
-            if (open) {
-                openSelectSchema();
-            } else {
-                closeSelectSchema();
-            }
+            setInnerIsSelectSchemaOpen(open);
         },
-        [openSelectSchema, closeSelectSchema]
+        [setInnerIsSelectSchemaOpen]
     );
     const schemasOptions: SelectBoxOption[] = [];
     const filteredSchemas = initialFilteredSchemas;
@@ -92,7 +89,7 @@ export const SidePanel: React.FC<SidePanelProps> = ({
                 <Select
                     value={selectedSidebarSection}
                     onValueChange={(value) =>
-                        selectSidebarSection(value as SidebarSection)
+                        setSelectedSidebarSection(value as SidebarSection)
                     }
                 >
                     <SelectTrigger className="rounded-none border-none font-semibold shadow-none hover:bg-secondary hover:underline focus:border-transparent focus:ring-0">
@@ -125,16 +122,36 @@ export const SidePanel: React.FC<SidePanelProps> = ({
                     schemas={schemas}
                     tables={initialTables}
                     filteredSchemas={initialFilteredSchemas}
+                    openedTableInSidebar={openTable}
+                    hideSidePanel={() => {
+                        console.error('Not implemented: hideSidePanel');
+                    }}
+                    openTableFromSidebar={(id) => setOpenTable(id)}
+                    closeAllTablesInSidebar={() => {
+                        console.error(
+                            'Not implemented: closeAllTablesInSidebar'
+                        );
+                    }}
                 />
             ) : selectedSidebarSection === 'relationships' ? (
                 <RelationshipsSection
                     relationships={initialRelationships}
                     filteredSchemas={initialFilteredSchemas}
+                    closeAllRelationshipsInSidebar={() => {
+                        console.error(
+                            'Not implemented: closeAllRelationshipsInSidebar'
+                        );
+                    }}
                 />
             ) : (
                 <DependenciesSection
                     dependencies={initialDependencies}
                     filteredSchemas={initialFilteredSchemas}
+                    closeAllDependenciesInSidebar={() => {
+                        console.error(
+                            'Not implemented: closeAllDependenciesInSidebar'
+                        );
+                    }}
                 />
             )}
         </aside>

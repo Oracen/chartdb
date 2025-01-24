@@ -1,4 +1,3 @@
-import { useLayout } from '@/hooks/use-layout';
 import type { DBDependency } from '@/lib/domain/db-dependency';
 import { cn } from '@/lib/utils';
 import type { Edge, EdgeProps } from '@xyflow/react';
@@ -10,6 +9,10 @@ export type DependencyEdgeType = Edge<
         dependency: DBDependency;
         highlighted?: boolean;
         dependencies: DBDependency[];
+        openDependencyFromSidebar: (id: string) => void;
+        selectSidebarSection: (
+            section: 'tables' | 'relationships' | 'dependencies'
+        ) => void;
     },
     'dependency-edge'
 >;
@@ -27,12 +30,11 @@ export const DependencyEdge: React.FC<EdgeProps<DependencyEdgeType>> = ({
 }) => {
     const { getInternalNode } = useReactFlow();
     const dependencies = data?.dependencies || [];
-    const { openDependencyFromSidebar, selectSidebarSection } = useLayout();
 
     const openDependencyInEditor = useCallback(() => {
-        selectSidebarSection('dependencies');
-        openDependencyFromSidebar(id);
-    }, [id, openDependencyFromSidebar, selectSidebarSection]);
+        data?.selectSidebarSection('dependencies');
+        data?.openDependencyFromSidebar(id);
+    }, [id, data?.openDependencyFromSidebar, data?.selectSidebarSection]);
 
     const edgeNumber = useMemo(
         () =>

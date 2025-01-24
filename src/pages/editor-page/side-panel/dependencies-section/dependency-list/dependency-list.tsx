@@ -1,5 +1,4 @@
 import { Accordion } from '@/components/accordion/accordion';
-import { useLayout } from '@/hooks/use-layout';
 import type { DBDependency } from '@/lib/domain/db-dependency';
 import React, { useCallback } from 'react';
 import { DependencyListItem } from './dependency-list-item/dependency-list-item';
@@ -11,8 +10,9 @@ export interface DependencyListProps {
 export const DependencyList: React.FC<DependencyListProps> = ({
     dependencies,
 }) => {
-    const { openDependencyFromSidebar, openedDependencyInSidebar } =
-        useLayout();
+    const [openedDependency, setOpenedDependency] = React.useState<
+        string | null
+    >(null);
     const lastOpenedDependency = React.useRef<string | null>(null);
 
     const refs = dependencies.reduce(
@@ -34,21 +34,21 @@ export const DependencyList: React.FC<DependencyListProps> = ({
 
     const handleScrollToDependency = useCallback(() => {
         if (
-            openedDependencyInSidebar &&
-            lastOpenedDependency.current !== openedDependencyInSidebar
+            openedDependency &&
+            lastOpenedDependency.current !== openedDependency
         ) {
-            lastOpenedDependency.current = openedDependencyInSidebar;
-            scrollToDependency(openedDependencyInSidebar);
+            lastOpenedDependency.current = openedDependency;
+            scrollToDependency(openedDependency);
         }
-    }, [scrollToDependency, openedDependencyInSidebar]);
+    }, [scrollToDependency, openedDependency]);
 
     return (
         <Accordion
             type="single"
             collapsible
             className="flex w-full flex-col gap-1"
-            value={openedDependencyInSidebar}
-            onValueChange={openDependencyFromSidebar}
+            value={openedDependency || ''}
+            onValueChange={setOpenedDependency}
             onAnimationEnd={handleScrollToDependency}
         >
             {dependencies.map((dependency) => (

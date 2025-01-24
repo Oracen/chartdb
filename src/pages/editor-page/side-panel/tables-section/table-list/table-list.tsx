@@ -1,5 +1,4 @@
 import { Accordion } from '@/components/accordion/accordion';
-import { useLayout } from '@/hooks/use-layout';
 import type { DBTable } from '@/lib/domain/db-table';
 
 import { DBSchema } from '@/lib/domain/db-schema';
@@ -9,10 +8,18 @@ import { TableListItem } from './table-list-item/table-list-item';
 export interface TableListProps {
     tables: DBTable[];
     schemas: DBSchema[];
+    hideSidePanel: () => void;
+    openTableFromSidebar: (id: string | null) => void;
+    openedTableInSidebar: string | null;
 }
 
-export const TableList: React.FC<TableListProps> = ({ tables, schemas }) => {
-    const { openTableFromSidebar, openedTableInSidebar } = useLayout();
+export const TableList: React.FC<TableListProps> = ({
+    tables,
+    schemas,
+    hideSidePanel,
+    openTableFromSidebar,
+    openedTableInSidebar,
+}) => {
     const lastOpenedTable = React.useRef<string | null>(null);
     const refs = useMemo(
         () =>
@@ -50,7 +57,7 @@ export const TableList: React.FC<TableListProps> = ({ tables, schemas }) => {
             type="single"
             collapsible
             className="flex w-full flex-col gap-1"
-            value={openedTableInSidebar}
+            value={openedTableInSidebar || ''}
             onValueChange={openTableFromSidebar}
             onAnimationEnd={handleScrollToTable}
         >
@@ -87,6 +94,7 @@ export const TableList: React.FC<TableListProps> = ({ tables, schemas }) => {
                         table={table}
                         ref={refs[table.id]}
                         schemas={schemas}
+                        hideSidePanel={hideSidePanel}
                     />
                 ))}
         </Accordion>

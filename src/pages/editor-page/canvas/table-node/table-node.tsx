@@ -1,6 +1,5 @@
 import { Button } from '@/components/button/button';
 import { Label } from '@/components/label/label';
-import { useLayout } from '@/hooks/use-layout';
 import { DBDependency } from '@/lib/domain/db-dependency';
 import type { DBField } from '@/lib/domain/db-field';
 import { DBRelationship } from '@/lib/domain/db-relationship';
@@ -33,6 +32,10 @@ export type TableNodeType = Node<
         dependencies: DBDependency[];
 
         readonly: boolean;
+        openTableFromSidebar: (tableId: string) => void;
+        selectSidebarSection: (
+            section: 'tables' | 'relationships' | 'dependencies'
+        ) => void;
     },
     'table'
 >;
@@ -54,10 +57,11 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
             relationships,
             dependencies,
             readonly,
+            openTableFromSidebar,
+            selectSidebarSection,
         },
     }) => {
         const edges = useStore((store) => store.edges) as EdgeType[];
-        const { openTableFromSidebar, selectSidebarSection } = useLayout();
         const [expanded, setExpanded] = useState(false);
         const { t } = useTranslation();
 
@@ -130,7 +134,11 @@ export const TableNode: React.FC<NodeProps<TableNodeType>> = React.memo(
         }, [expanded, table.fields, isMustDisplayedField]);
 
         return (
-            <TableNodeContextMenu table={table} readonly={readonly}>
+            <TableNodeContextMenu
+                table={table}
+                readonly={readonly}
+                openTableFromSidebar={openTableFromSidebar}
+            >
                 <div
                     className={cn(
                         'flex w-full flex-col border-2 bg-slate-50 dark:bg-slate-950 rounded-lg shadow-sm transition-transform duration-300',

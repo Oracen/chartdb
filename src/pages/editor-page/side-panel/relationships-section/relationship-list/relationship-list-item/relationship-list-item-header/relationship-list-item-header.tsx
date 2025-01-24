@@ -8,7 +8,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/dropdown-menu/dropdown-menu';
 import { Input } from '@/components/input/input';
-import { useLayout } from '@/hooks/use-layout';
 import type { DBRelationship } from '@/lib/domain/db-relationship';
 import { useReactFlow } from '@xyflow/react';
 import {
@@ -26,14 +25,14 @@ import { useTranslation } from 'react-i18next';
 
 export interface RelationshipListItemHeaderProps {
     relationship: DBRelationship;
+    hideSidePanel: () => void;
 }
 
 export const RelationshipListItemHeader: React.FC<
     RelationshipListItemHeaderProps
-> = ({ relationship }) => {
+> = ({ relationship, hideSidePanel }) => {
     const { fitView, deleteElements, setEdges } = useReactFlow();
     const { t } = useTranslation();
-    const { hideSidePanel } = useLayout();
     const [editMode, setEditMode] = React.useState(false);
     const [relationshipName, setRelationshipName] = React.useState(
         relationship.name

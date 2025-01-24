@@ -7,7 +7,6 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
-import { useLayout } from '@/hooks/use-layout';
 import type { DBDependency } from '@/lib/domain/db-dependency';
 import { ListCollapse } from 'lucide-react';
 import React, { useMemo } from 'react';
@@ -17,14 +16,15 @@ import { DependencyList } from './dependency-list/dependency-list';
 export interface DependenciesSectionProps {
     dependencies: DBDependency[];
     filteredSchemas: string[];
+    closeAllDependenciesInSidebar: () => void;
 }
 
 export const DependenciesSection: React.FC<DependenciesSectionProps> = ({
     dependencies,
     filteredSchemas,
+    closeAllDependenciesInSidebar,
 }) => {
     const [filterText, setFilterText] = React.useState('');
-    const { closeAllDependenciesInSidebar } = useLayout();
     const { t } = useTranslation();
 
     const filteredDependencies = useMemo(() => {

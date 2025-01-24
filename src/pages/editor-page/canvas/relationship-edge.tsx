@@ -1,4 +1,3 @@
-import { useLayout } from '@/hooks/use-layout';
 import type { DBRelationship } from '@/lib/domain/db-relationship';
 import { cn } from '@/lib/utils';
 import type { Edge, EdgeProps } from '@xyflow/react';
@@ -12,6 +11,10 @@ export type RelationshipEdgeType = Edge<
         relationship: DBRelationship;
         relationships: DBRelationship[];
         highlighted?: boolean;
+        openRelationshipFromSidebar: (id: string) => void;
+        selectSidebarSection: (
+            section: 'tables' | 'relationships' | 'dependencies'
+        ) => void;
     },
     'relationship-edge'
 >;
@@ -28,15 +31,14 @@ export const RelationshipEdge: React.FC<EdgeProps<RelationshipEdgeType>> = ({
     data,
 }) => {
     const { getInternalNode, getEdge } = useReactFlow();
-    const { openRelationshipFromSidebar, selectSidebarSection } = useLayout();
 
     const relationships = data?.relationships || [];
     const relationship = data?.relationship;
 
     const openRelationshipInEditor = useCallback(() => {
-        selectSidebarSection('relationships');
-        openRelationshipFromSidebar(id);
-    }, [id, openRelationshipFromSidebar, selectSidebarSection]);
+        data?.selectSidebarSection('relationships');
+        data?.openRelationshipFromSidebar(id);
+    }, [id, data?.openRelationshipFromSidebar, data?.selectSidebarSection]);
 
     const edgeNumber = useMemo(
         () =>

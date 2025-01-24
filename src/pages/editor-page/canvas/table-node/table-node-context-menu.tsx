@@ -4,7 +4,6 @@ import {
     ContextMenuItem,
     ContextMenuTrigger,
 } from '@/components/context-menu/context-menu';
-import { useLayout } from '@/hooks/use-layout';
 import type { DBTable } from '@/lib/domain/db-table';
 import { Copy, Pencil, Trash2 } from 'lucide-react';
 import React, { useCallback } from 'react';
@@ -13,12 +12,12 @@ import { useTranslation } from 'react-i18next';
 export interface TableNodeContextMenuProps {
     table: DBTable;
     readonly: boolean;
+    openTableFromSidebar: (tableId: string) => void;
 }
 
 export const TableNodeContextMenu: React.FC<
     React.PropsWithChildren<TableNodeContextMenuProps>
-> = ({ children, table, readonly }) => {
-    const { openTableFromSidebar } = useLayout();
+> = ({ children, table, readonly, openTableFromSidebar }) => {
     const { t } = useTranslation();
 
     const duplicateTableHandler = useCallback(() => {

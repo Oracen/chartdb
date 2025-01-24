@@ -8,7 +8,6 @@ import {
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
 
-import { useLayout } from '@/hooks/use-layout';
 import type { DBRelationship } from '@/lib/domain/db-relationship';
 import { shouldShowRelationshipBySchemaFilter } from '@/lib/domain/db-relationship';
 import { ListCollapse, Workflow } from 'lucide-react';
@@ -19,15 +18,20 @@ import { RelationshipList } from './relationship-list/relationship-list';
 export interface RelationshipsSectionProps {
     relationships: DBRelationship[];
     filteredSchemas: string[];
+    closeAllRelationshipsInSidebar: () => void;
 }
 
 export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({
     relationships,
     filteredSchemas,
+    closeAllRelationshipsInSidebar,
 }) => {
     const [filterText, setFilterText] = React.useState('');
-    const { closeAllRelationshipsInSidebar } = useLayout();
     const { t } = useTranslation();
+
+    const [openRelationship, setOpenRelationship] = React.useState<
+        string | null
+    >(null);
 
     const filteredRelationships = useMemo(() => {
         const filterName: (relationship: DBRelationship) => boolean = (
@@ -102,6 +106,8 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({
                     ) : (
                         <RelationshipList
                             relationships={filteredRelationships}
+                            openRelationshipFromSidebar={setOpenRelationship}
+                            openedRelationshipInSidebar={openRelationship}
                         />
                     )}
                 </ScrollArea>

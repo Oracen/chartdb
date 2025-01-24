@@ -7,7 +7,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/dropdown-menu/dropdown-menu';
-import { useLayout } from '@/hooks/use-layout';
 import type { DBDependency } from '@/lib/domain/db-dependency';
 import { DBTable } from '@/lib/domain/db-table';
 import { useReactFlow } from '@xyflow/react';
@@ -20,14 +19,14 @@ export interface DependencyListItemHeaderProps {
     dependency: DBDependency;
     table: DBTable;
     dependentTable: DBTable;
+    hideSidePanel: () => void;
 }
 
 export const DependencyListItemHeader: React.FC<
     DependencyListItemHeaderProps
-> = ({ dependency, table, dependentTable }) => {
+> = ({ dependency, table, dependentTable, hideSidePanel }) => {
     const { fitView, deleteElements, setEdges } = useReactFlow();
     const { t } = useTranslation();
-    const { hideSidePanel } = useLayout();
 
     const dependencyName = useMemo(() => {
         // should not happen

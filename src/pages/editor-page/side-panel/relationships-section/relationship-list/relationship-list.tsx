@@ -1,18 +1,19 @@
-import React, { useCallback } from 'react';
 import { Accordion } from '@/components/accordion/accordion';
-import { RelationshipListItem } from './relationship-list-item/relationship-list-item';
 import type { DBRelationship } from '@/lib/domain/db-relationship';
-import { useLayout } from '@/hooks/use-layout';
+import React, { useCallback } from 'react';
+import { RelationshipListItem } from './relationship-list-item/relationship-list-item';
 
 export interface RelationshipListProps {
     relationships: DBRelationship[];
+    openedRelationshipInSidebar: string | null;
+    openRelationshipFromSidebar: (id: string | null) => void;
 }
 
 export const RelationshipList: React.FC<RelationshipListProps> = ({
     relationships,
+    openedRelationshipInSidebar,
+    openRelationshipFromSidebar,
 }) => {
-    const { openRelationshipFromSidebar, openedRelationshipInSidebar } =
-        useLayout();
     const lastOpenedRelationship = React.useRef<string | null>(null);
 
     const refs = relationships.reduce(
@@ -47,7 +48,7 @@ export const RelationshipList: React.FC<RelationshipListProps> = ({
             type="single"
             collapsible
             className="flex w-full flex-col gap-1"
-            value={openedRelationshipInSidebar}
+            value={openedRelationshipInSidebar || ''}
             onValueChange={openRelationshipFromSidebar}
             onAnimationEnd={handleScrollToRelationship}
         >

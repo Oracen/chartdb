@@ -14,12 +14,13 @@ import { TableListItemHeader } from './table-list-item-header/table-list-item-he
 export interface TableListItemProps {
     table: DBTable;
     schemas: DBSchema[];
+    hideSidePanel: () => void;
 }
 
 export const TableListItem = React.forwardRef<
     React.ElementRef<typeof AccordionItem>,
     TableListItemProps
->(({ table, schemas }, ref) => {
+>(({ table, schemas, hideSidePanel }, ref) => {
     const { attributes, setNodeRef, transform, transition } = useSortable({
         id: table.id,
     });
@@ -47,6 +48,7 @@ export const TableListItem = React.forwardRef<
                         table={table}
                         schemas={schemas}
                         filteredSchemas={[]}
+                        hideSidePanel={hideSidePanel}
                     />
                 </AccordionTrigger>
                 <AccordionContent>

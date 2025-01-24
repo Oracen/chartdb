@@ -5,6 +5,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/components/tooltip/tooltip';
+import { SidebarSection } from '@/context/layout-context/layout-context';
 import { DBDependency } from '@/lib/domain/db-dependency';
 import { DBRelationship } from '@/lib/domain/db-relationship';
 import type { DBTable } from '@/lib/domain/db-table';
@@ -77,6 +78,11 @@ const tableToTableNode = (
     relationships: DBRelationship[],
     dependencies: DBDependency[],
     readonly: boolean,
+
+    openTableFromSidebar: (tableId: string) => void,
+    selectSidebarSection: (
+        section: 'tables' | 'relationships' | 'dependencies'
+    ) => void,
     filteredSchemas?: string[]
 ): TableNodeType => ({
     id: table.id,
@@ -88,6 +94,8 @@ const tableToTableNode = (
         relationships,
         dependencies,
         readonly,
+        openTableFromSidebar,
+        selectSidebarSection,
     },
     width: table.width ?? MIN_TABLE_SIZE,
     hidden: !shouldShowTablesBySchemaFilter(table, filteredSchemas),
@@ -97,6 +105,8 @@ export interface CanvasProps {
     initialTables: DBTable[];
     initialRelationships: DBRelationship[];
     initialDependencies: DBDependency[];
+    openTableFromSidebar: (tableId: string) => void;
+    setSelectedSection: (section: SidebarSection) => void;
     readonly?: boolean;
 }
 
@@ -105,6 +115,8 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
     initialRelationships,
     initialDependencies,
     readonly,
+    openTableFromSidebar,
+    setSelectedSection,
 }) => {
     const showDependenciesOnCanvas = true;
     const showMiniMapOnCanvas = true;
@@ -115,6 +127,7 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
     const [selectedRelationshipIds, setSelectedRelationshipIds] = useState<
         string[]
     >([]);
+
     const { t } = useTranslation();
 
     const filteredSchemas: string[] = [];
@@ -137,6 +150,8 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                 relationships,
                 dependencies,
                 readonly || true,
+                openTableFromSidebar,
+                setSelectedSection,
                 filteredSchemas
             )
         )
@@ -157,6 +172,8 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                 relationships,
                 dependencies,
                 readonly || true,
+                openTableFromSidebar,
+                setSelectedSection,
                 filteredSchemas
             )
         );
@@ -205,7 +222,12 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                     sourceHandle: `${LEFT_HANDLE_ID_PREFIX}${relationship.sourceFieldId}`,
                     targetHandle: `${TARGET_ID_PREFIX}${targetIndexes[`${relationship.targetTableId}${relationship.targetFieldId}`]++}_${relationship.targetFieldId}`,
                     type: 'relationship-edge',
-                    data: { relationship, relationships },
+                    data: {
+                        relationship,
+                        relationships,
+                        openRelationshipFromSidebar: () => {},
+                        selectSidebarSection: setSelectedSection,
+                    },
                 })
             ),
             ...dependencies.map(
@@ -216,7 +238,12 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                     sourceHandle: `${TOP_SOURCE_HANDLE_ID_PREFIX}${dep.dependentTableId}`,
                     targetHandle: `${TARGET_DEP_PREFIX}${targetDepIndexes[dep.tableId]++}_${dep.tableId}`,
                     type: 'dependency-edge',
-                    data: { dependency: dep, dependencies },
+                    data: {
+                        dependency: dep,
+                        dependencies,
+                        openDependencyFromSidebar: () => {},
+                        selectSidebarSection: setSelectedSection,
+                    },
                     hidden: false,
                 })
             ),
@@ -302,6 +329,8 @@ export const CanvasReduced: React.FC<CanvasProps> = ({
                     relationships,
                     dependencies,
                     readonly || true,
+                    openTableFromSidebar,
+                    setSelectedSection,
                     filteredSchemas
                 );
                 return {
